@@ -1,6 +1,8 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, type ComponentType } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Music, Pause, Play, Volume2, VolumeX, SkipForward, SkipBack } from "lucide-react";
+import ReactPlayer from "react-player";
+
 
 const musicPlaylist = [
   {
@@ -9,11 +11,23 @@ const musicPlaylist = [
   },
   {
     title: "Touching Piano",
-    url: "https://pixabay.com/music/pop-anthony-love-me-royalty-free-music-177759/",
+    url: "https://youtu.be/DR-S_cuxYN4?si=A6MH-kViT4d18iTp",
   },
   {
     title: "Relaxing Harp",
-    url: "https://cdn.pixabay.com/audio/2023/10/06/audio_1411544863.mp3",
+    url: "https://cdn.pixabay.com/download/audio/2025/12/26/audio_3c05258be0.mp3",
+  },
+  {
+    title: "Rock Music Free",
+    url: "https://pixabay.com/music/rock-music-free-458044/",
+  },
+  {
+    title: "Music Free (Pixabay)",
+    url: "/music/music-free-458044.mp3",
+  },
+  {
+    title: "Happy Kids Background (Pixabay)",
+    url: "/music/happy-kids-background-music-456466.mp3",
   },
 ];
 
@@ -25,18 +39,35 @@ const MusicPlayer = () => {
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [volume, setVolume] = useState(0.4);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const currentUrl = musicPlaylist[currentTrackIndex].url;
+  const isYouTube = /(?:youtube\.com|youtu\.be)\//i.test(currentUrl);
+  type PlayerProps = {
+    url: string;
+    playing: boolean;
+    muted: boolean;
+    volume: number;
+    controls?: boolean;
+    width?: number | string;
+    height?: number | string;
+    onEnded?: () => void;
+  };
+  const RP = ReactPlayer as unknown as ComponentType<PlayerProps>;
 
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.pause();
+      audioRef.current = null;
     }
-    audioRef.current = new Audio(musicPlaylist[currentTrackIndex].url);
-    audioRef.current.loop = false;
-    audioRef.current.volume = volume;
-    if (isPlaying) {
-      audioRef.current.play().catch(console.error);
+    if (!isYouTube) {
+      audioRef.current = new Audio(currentUrl);
+      audioRef.current.loop = false;
+      audioRef.current.volume = volume;
+      audioRef.current.muted = isMuted;
+      if (isPlaying) {
+        audioRef.current.play().catch(console.error);
+      }
+      audioRef.current.onended = () => handleNext();
     }
-    audioRef.current.onended = () => handleNext();
 
     return () => {
       if (audioRef.current) {
@@ -44,16 +75,19 @@ const MusicPlayer = () => {
         audioRef.current = null;
       }
     };
-  }, [currentTrackIndex, isPlaying, volume]);
+  }, [currentTrackIndex, isPlaying, volume, isMuted, isYouTube, currentUrl]);
 
   const togglePlay = () => {
-    if (!audioRef.current) return;
-
-    if (isPlaying) {
-      audioRef.current.pause();
+    if (!isYouTube) {
+      if (!audioRef.current) return;
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play().catch(console.error);
+        setShowPrompt(false);
+      }
     } else {
-      audioRef.current.play().catch(console.error);
-      setShowPrompt(false);
+      if (!isPlaying) setShowPrompt(false);
     }
     setIsPlaying(!isPlaying);
   };
@@ -67,21 +101,47 @@ const MusicPlayer = () => {
   };
 
   const toggleMute = () => {
-    if (!audioRef.current) return;
-    audioRef.current.muted = !isMuted;
+    if (!isYouTube) {
+      if (!audioRef.current) return;
+      audioRef.current.muted = !isMuted;
+    }
     setIsMuted(!isMuted);
   };
 
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newVolume = parseFloat(e.target.value);
     setVolume(newVolume);
-    if (audioRef.current) {
+    if (!isYouTube && audioRef.current) {
       audioRef.current.volume = newVolume;
     }
   };
 
+  const [showList, setShowList] = useState(false);
+  const selectTrack = (index: number) => {
+    setCurrentTrackIndex(index);
+    setIsPlaying(true);
+    setShowPrompt(false);
+    setShowList(false);
+  };
+
   return (
     <>
+      <AnimatePresence>
+        {isYouTube && (
+          <div style={{ position: "fixed", width: 0, height: 0, overflow: "hidden" }}>
+            <RP
+              url={currentUrl}
+              playing={isPlaying}
+              muted={isMuted}
+              volume={volume}
+              controls={false}
+              width={0}
+              height={0}
+              onEnded={handleNext}
+            />
+          </div>
+        )}
+      </AnimatePresence>
       {/* Initial prompt overlay */}
       <AnimatePresence>
         {showPrompt && (
@@ -154,8 +214,9 @@ const MusicPlayer = () => {
             transition-all duration-300
             ${isExpanded ? 'px-4 py-2' : 'p-0'}
           `}
+          style={{ position: 'relative' }}
           onHoverStart={() => setIsExpanded(true)}
-          onHoverEnd={() => setIsExpanded(false)}
+          onHoverEnd={() => { setIsExpanded(false); setShowList(false); }}
         >
           {/* Previous button */}
           <AnimatePresence>
@@ -191,17 +252,42 @@ const MusicPlayer = () => {
             )}
           </AnimatePresence>
 
-          {/* Now playing text */}
+          {/* Now playing text (click to open playlist) */}
           <AnimatePresence>
-            {isExpanded && isPlaying && (
+            {isExpanded && (
               <motion.span
-                className="font-body text-sm text-muted-foreground whitespace-nowrap"
+                className="font-body text-sm text-muted-foreground whitespace-nowrap cursor-pointer select-none"
                 initial={{ opacity: 0, width: 0 }}
                 animate={{ opacity: 1, width: 'auto' }}
                 exit={{ opacity: 0, width: 0 }}
+                onClick={() => setShowList((v) => !v)}
               >
                 {musicPlaylist[currentTrackIndex].title}
               </motion.span>
+            )}
+          </AnimatePresence>
+
+          {/* Playlist dropdown */}
+          <AnimatePresence>
+            {isExpanded && showList && (
+              <motion.div
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 6 }}
+                className="absolute bottom-full right-0 mb-2 bg-background rounded-xl shadow-elegant border border-gold/20 overflow-hidden"
+              >
+                <div className="max-h-64 overflow-auto min-w-[220px]">
+                  {musicPlaylist.map((track, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => selectTrack(idx)}
+                      className={`w-full text-left px-3 py-2 text-sm font-body hover:bg-muted transition-colors ${idx === currentTrackIndex ? 'text-foreground' : 'text-muted-foreground'}`}
+                    >
+                      {track.title}
+                    </button>
+                  ))}
+                </div>
+              </motion.div>
             )}
           </AnimatePresence>
 
