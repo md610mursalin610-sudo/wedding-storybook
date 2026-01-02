@@ -1,13 +1,22 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import HeroSection from "@/components/HeroSection";
 import LoveStorySection from "@/components/LoveStorySection";
 import VenueSection from "@/components/VenueSection";
-import RSVPSection from "@/components/RSVPSection";
 import MasonryGallery from "@/components/MasonryGallery";
 import Lightbox from "@/components/Lightbox";
 import Footer from "@/components/Footer";
 import FloatingPetals from "@/components/FloatingPetals";
 import MusicPlayer from "@/components/MusicPlayer";
+import { supabase } from "@/lib/supabaseClient";
+
+type DBCategory = { id: string; name: string };
+type DBPhoto = {
+  id: string;
+  public_url: string;
+  caption: string | null;
+  category_id: string | null;
+  created_at: string;
+};
 
 // Wedding photos with categories and varied aspect ratios
 const weddingPhotos = [
@@ -40,10 +49,62 @@ const weddingPhotos = [
 const Index = () => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
+  const [dbPhotos, setDbPhotos] = useState<Array<{ id: number; src: string; alt: string; category: string; caption: string }>>([]);
+  const [loadingPhotos, setLoadingPhotos] = useState(false);
+  const [dbCategories, setDbCategories] = useState<string[]>([]);
 
   const coupleNames = "Laboni Akhter & Adnan Arif";
   const weddingDate = "November 1, 2024";
   const heroImage = "/herosection.jpg";
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        setLoadingPhotos(true);
+        // Debug: environment check (shows only first part of URL for safety)
+        const url = import.meta.env?.VITE_SUPABASE_URL as string | undefined;
+        const anon = (import.meta.env?.VITE_SUPABASE_ANON_KEY as string | undefined)?.slice(0, 10);
+        console.log("[Gallery] Loading from Supabase", { url: url?.slice(0, 40) + "...", anonPrefix: anon });
+
+        // Load categories into a map for name lookup
+        const { data: cats, error: catsErr } = await supabase.from("categories").select("id, name");
+        if (catsErr) {
+          console.error("[Gallery] categories error", catsErr);
+        }
+        const catsTyped = (cats ?? []) as DBCategory[];
+        const catMap = new Map<string, string>(catsTyped.map((c) => [c.id, c.name]));
+        setDbCategories(catsTyped.map((c) => c.name));
+
+        // Load photos
+        const { data: rows, error: photosErr } = await supabase
+          .from("photos")
+          .select("id, public_url, caption, category_id, created_at")
+          .order("created_at", { ascending: false })
+          .limit(200);
+        if (photosErr) {
+          console.error("[Gallery] photos error", photosErr);
+        }
+        console.log("[Gallery] photos fetched:", rows?.length ?? 0);
+
+        const rowsTyped = (rows ?? []) as DBPhoto[];
+        const mapped = rowsTyped.map((p, idx: number) => ({
+          id: idx + 1,
+          src: p.public_url,
+          alt: p.caption ? p.caption : "Wedding photo",
+          category: p.category_id ? (catMap.get(p.category_id) ?? "Details") : "Details",
+          caption: p.caption ?? "",
+        }));
+        setDbPhotos(mapped);
+      } catch (err) {
+        console.error("[Gallery] unexpected error", err);
+      } finally {
+        setLoadingPhotos(false);
+      }
+    };
+    void load();
+  }, []);
+
+  const photos = useMemo(() => (dbPhotos.length ? dbPhotos : weddingPhotos), [dbPhotos]);
 
   const handlePhotoClick = (index: number) => {
     setCurrentPhotoIndex(index);
@@ -52,13 +113,13 @@ const Index = () => {
 
   const handlePrevious = () => {
     setCurrentPhotoIndex((prev) =>
-      prev === 0 ? weddingPhotos.length - 1 : prev - 1
+      prev === 0 ? photos.length - 1 : prev - 1
     );
   };
 
   const handleNext = () => {
     setCurrentPhotoIndex((prev) =>
-      prev === weddingPhotos.length - 1 ? 0 : prev + 1
+      prev === photos.length - 1 ? 0 : prev + 1
     );
   };
 
@@ -81,14 +142,13 @@ const Index = () => {
       <VenueSection />
 
       <MasonryGallery
-        photos={weddingPhotos}
+        photos={photos}
         onPhotoClick={handlePhotoClick}
+        categories={dbCategories}
       />
 
-      <RSVPSection />
-
       <Lightbox
-        photos={weddingPhotos}
+        photos={photos}
         currentIndex={currentPhotoIndex}
         isOpen={lightboxOpen}
         onClose={() => setLightboxOpen(false)}

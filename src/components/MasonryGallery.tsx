@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { resolveImageSrc, resolveDriveThumb } from "@/lib/utils";
 
@@ -13,17 +13,32 @@ interface Photo {
 interface MasonryGalleryProps {
   photos: Photo[];
   onPhotoClick: (index: number) => void;
+  categories?: string[]; // optional external categories, e.g., from DB
 }
 
-const categories = ["All", "Ceremony", "Reception", "Portraits", "Details"];
-
-const MasonryGallery = ({ photos, onPhotoClick }: MasonryGalleryProps) => {
+const MasonryGallery = ({ photos, onPhotoClick, categories }: MasonryGalleryProps) => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
 
-  const filteredPhotos = activeCategory === "All" 
-    ? photos 
-    : photos.filter(photo => photo.category === activeCategory);
+  // Build categories list: prefer provided categories; otherwise derive from photos
+  const categoriesList = useMemo(() => {
+    const base = categories && categories.length
+      ? categories
+      : Array.from(new Set(photos.map((p) => p.category).filter(Boolean)));
+    const deduped = Array.from(new Set(["All", ...base]));
+    return deduped;
+  }, [categories, photos]);
+
+  // Ensure activeCategory is valid when categories change
+  useEffect(() => {
+    if (!categoriesList.includes(activeCategory)) {
+      setActiveCategory("All");
+    }
+  }, [categoriesList, activeCategory]);
+
+  const filteredPhotos = activeCategory === "All"
+    ? photos
+    : photos.filter((photo) => photo.category === activeCategory);
 
   const handleImageLoad = (id: number) => {
     setLoadedImages(prev => new Set(prev).add(id));
@@ -63,7 +78,7 @@ const MasonryGallery = ({ photos, onPhotoClick }: MasonryGalleryProps) => {
 
         {/* Category Filters */}
         <div className="flex flex-wrap justify-center gap-3 md:gap-4">
-          {categories.map((category) => (
+          {categoriesList.map((category) => (
             <motion.button
               key={category}
               onClick={() => setActiveCategory(category)}
