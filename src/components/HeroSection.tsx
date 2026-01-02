@@ -1,4 +1,6 @@
-import { Heart } from "lucide-react";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { Heart, ChevronDown } from "lucide-react";
 
 interface HeroSectionProps {
   coupleNames: string;
@@ -7,55 +9,152 @@ interface HeroSectionProps {
 }
 
 const HeroSection = ({ coupleNames, weddingDate, backgroundImage }: HeroSectionProps) => {
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+
+  const names = coupleNames.split(" & ");
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${backgroundImage})` }}
+    <section ref={ref} className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Parallax Background */}
+      <motion.div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-110"
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          y: backgroundY,
+        }}
       />
-      
+
       {/* Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-hero" />
-      
-      {/* Decorative Elements */}
-      <div className="absolute top-10 left-10 w-32 h-32 border border-gold/20 rounded-full animate-float opacity-50" />
-      <div className="absolute bottom-20 right-10 w-20 h-20 border border-gold/30 rounded-full animate-float delay-300 opacity-40" />
-      
+
+      {/* Decorative Corner Elements */}
+      <div className="absolute top-8 left-8 w-24 h-24 border-l-2 border-t-2 border-gold/30 rounded-tl-lg" />
+      <div className="absolute top-8 right-8 w-24 h-24 border-r-2 border-t-2 border-gold/30 rounded-tr-lg" />
+      <div className="absolute bottom-32 left-8 w-24 h-24 border-l-2 border-b-2 border-gold/30 rounded-bl-lg" />
+      <div className="absolute bottom-32 right-8 w-24 h-24 border-r-2 border-b-2 border-gold/30 rounded-br-lg" />
+
+      {/* Floating Decorative Circles */}
+      <motion.div
+        className="absolute top-1/4 left-[10%] w-32 h-32 rounded-full border border-gold/20"
+        animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute bottom-1/3 right-[15%] w-20 h-20 rounded-full border border-rose/20"
+        animate={{ y: [0, 15, 0], rotate: [0, -5, 0] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+      />
+
       {/* Content */}
-      <div className="relative z-10 text-center px-4">
-        {/* Decorative Line */}
-        <div className="flex items-center justify-center gap-4 mb-8 opacity-0 animate-fade-in">
-          <div className="w-16 md:w-24 h-px bg-gradient-to-r from-transparent via-gold to-transparent" />
-          <Heart className="w-5 h-5 text-gold animate-shimmer" fill="currentColor" />
-          <div className="w-16 md:w-24 h-px bg-gradient-to-r from-transparent via-gold to-transparent" />
-        </div>
-        
-        {/* Couple Names */}
-        <h1 className="font-display text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-medium tracking-wide text-foreground opacity-0 animate-slide-up delay-200">
-          {coupleNames}
-        </h1>
-        
+      <motion.div
+        className="relative z-10 text-center px-4 max-w-4xl mx-auto"
+        style={{ y: textY, opacity }}
+      >
+        {/* Top Ornament */}
+        <motion.div
+          className="flex items-center justify-center gap-4 mb-10"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          <div className="w-20 md:w-32 h-px bg-gradient-to-r from-transparent via-gold/60 to-transparent" />
+          <Heart className="w-5 h-5 text-gold animate-pulse-glow" fill="currentColor" />
+          <div className="w-20 md:w-32 h-px bg-gradient-to-r from-transparent via-gold/60 to-transparent" />
+        </motion.div>
+
         {/* Wedding Label */}
-        <p className="font-body text-lg md:text-xl tracking-[0.3em] uppercase text-muted-foreground mt-6 mb-4 opacity-0 animate-fade-in delay-300">
-          Wedding Celebration
-        </p>
-        
-        {/* Date */}
-        <p className="font-display text-xl md:text-2xl lg:text-3xl italic text-gradient-gold opacity-0 animate-slide-up delay-400">
-          {weddingDate}
-        </p>
-        
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 opacity-0 animate-fade-in delay-500">
-          <div className="flex flex-col items-center gap-2 text-muted-foreground">
-            <span className="font-body text-sm tracking-widest uppercase">Scroll to view gallery</span>
-            <div className="w-6 h-10 border-2 border-gold/40 rounded-full flex justify-center pt-2">
-              <div className="w-1 h-2 bg-gold rounded-full animate-bounce" />
-            </div>
-          </div>
+        <motion.p
+          className="font-accent text-sm md:text-base tracking-[0.5em] uppercase text-muted-foreground mb-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.4 }}
+        >
+          The Wedding of
+        </motion.p>
+
+        {/* Couple Names - Animated */}
+        <div className="relative mb-8">
+          <motion.h1
+            className="font-display text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-medium tracking-wide text-foreground"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.5 }}
+          >
+            {names[0]}
+          </motion.h1>
+          
+          <motion.span
+            className="block font-accent text-3xl md:text-4xl lg:text-5xl text-gold my-4"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+          >
+            &
+          </motion.span>
+          
+          <motion.h1
+            className="font-display text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-medium tracking-wide text-foreground"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.7 }}
+          >
+            {names[1]}
+          </motion.h1>
         </div>
-      </div>
+
+        {/* Date with elegant styling */}
+        <motion.div
+          className="relative inline-block"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1 }}
+        >
+          <div className="absolute -inset-4 bg-gold/5 rounded-full blur-xl" />
+          <p className="relative font-display text-xl md:text-2xl lg:text-3xl italic text-gradient-gold">
+            {weddingDate}
+          </p>
+        </motion.div>
+
+        {/* Bottom Ornament */}
+        <motion.div
+          className="flex items-center justify-center gap-3 mt-10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 1.2 }}
+        >
+          <div className="w-2 h-2 bg-gold/40 rounded-full" />
+          <div className="w-16 h-px bg-gold/30" />
+          <div className="w-3 h-3 bg-gold/60 rounded-full" />
+          <div className="w-16 h-px bg-gold/30" />
+          <div className="w-2 h-2 bg-gold/40 rounded-full" />
+        </motion.div>
+      </motion.div>
+
+      {/* Scroll Indicator */}
+      <motion.div
+        className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, delay: 1.5 }}
+      >
+        <div className="flex flex-col items-center gap-3 text-muted-foreground">
+          <span className="font-body text-sm tracking-[0.3em] uppercase">View Gallery</span>
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <ChevronDown className="w-6 h-6 text-gold" />
+          </motion.div>
+        </div>
+      </motion.div>
     </section>
   );
 };
