@@ -6,6 +6,7 @@ interface Photo {
   src: string;
   alt: string;
   category: string;
+  caption: string;
 }
 
 interface MasonryGalleryProps {
@@ -138,11 +139,11 @@ const MasonryGallery = ({ photos, onPhotoClick }: MasonryGalleryProps) => {
                 </motion.div>
               </div>
 
-              {/* Category tag */}
-              <div className="absolute bottom-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <span className="px-3 py-1 bg-background/90 backdrop-blur-sm rounded-full text-xs font-body tracking-wider text-muted-foreground">
-                  {photo.category}
-                </span>
+              {/* Caption */}
+              <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <p className="text-white text-sm font-body bg-black/50 p-2 rounded">
+                  {photo.caption}
+                </p>
               </div>
             </motion.div>
           </motion.div>

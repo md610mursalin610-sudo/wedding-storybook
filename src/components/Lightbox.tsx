@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useState } from "react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
-import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Download } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Download, Play, Pause } from "lucide-react";
 
 interface Photo {
   id: number;
@@ -20,6 +20,16 @@ interface LightboxProps {
 const Lightbox = ({ photos, currentIndex, isOpen, onClose, onPrevious, onNext }: LightboxProps) => {
   const [isZoomed, setIsZoomed] = useState(false);
   const [dragOffset, setDragOffset] = useState(0);
+  const [isSlideshowActive, setIsSlideshowActive] = useState(false);
+
+  useEffect(() => {
+    if (isSlideshowActive) {
+      const timer = setInterval(() => {
+        onNext();
+      }, 3000);
+      return () => clearInterval(timer);
+    }
+  }, [isSlideshowActive, onNext]);
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (!isOpen) return;
@@ -58,7 +68,7 @@ const Lightbox = ({ photos, currentIndex, isOpen, onClose, onPrevious, onNext }:
     };
   }, [isOpen]);
 
-  const handleDragEnd = (_: any, info: PanInfo) => {
+  const handleDragEnd = (_: unknown, info: PanInfo) => {
     const threshold = 100;
     if (info.offset.x > threshold) {
       onPrevious();
@@ -122,6 +132,18 @@ const Lightbox = ({ photos, currentIndex, isOpen, onClose, onPrevious, onNext }:
               transition={{ delay: 0.25 }}
             >
               {isZoomed ? <ZoomOut className="w-5 h-5" /> : <ZoomIn className="w-5 h-5" />}
+            </motion.button>
+
+            <motion.button
+              onClick={() => setIsSlideshowActive(!isSlideshowActive)}
+              className="w-11 h-11 flex items-center justify-center rounded-full glass text-background/90 hover:bg-background/20 transition-colors"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              {isSlideshowActive ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
             </motion.button>
 
             <motion.button
