@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { resolveImageSrc, resolveDriveThumb } from "@/lib/utils";
 
 interface Photo {
   id: number;
@@ -111,7 +112,7 @@ const MasonryGallery = ({ photos, onPhotoClick }: MasonryGalleryProps) => {
               
               {/* Image */}
               <img
-                src={photo.src}
+                src={resolveImageSrc(photo.src)}
                 alt={photo.alt}
                 className={`
                   w-full h-auto object-cover
@@ -120,6 +121,13 @@ const MasonryGallery = ({ photos, onPhotoClick }: MasonryGalleryProps) => {
                   ${loadedImages.has(photo.id) ? 'opacity-100' : 'opacity-0'}
                 `}
                 onLoad={() => handleImageLoad(photo.id)}
+                onError={(e) => {
+                  const img = e.currentTarget as HTMLImageElement;
+                  if (!img.dataset.fallbackApplied) {
+                    img.dataset.fallbackApplied = "1";
+                    img.src = resolveDriveThumb(photo.src);
+                  }
+                }}
                 loading="lazy"
               />
 

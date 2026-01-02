@@ -1,6 +1,7 @@
 import { useEffect, useCallback, useState } from "react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Download, Play, Pause } from "lucide-react";
+import { resolveDownloadHref, resolveImageSrc, resolveDriveThumb } from "@/lib/utils";
 
 interface Photo {
   id: number;
@@ -81,7 +82,7 @@ const Lightbox = ({ photos, currentIndex, isOpen, onClose, onPrevious, onNext }:
 
   const handleDownload = () => {
     const link = document.createElement('a');
-    link.href = photos[currentIndex].src;
+    link.href = resolveDownloadHref(photos[currentIndex].src);
     link.download = `wedding-photo-${currentIndex + 1}.jpg`;
     link.click();
   };
@@ -217,7 +218,7 @@ const Lightbox = ({ photos, currentIndex, isOpen, onClose, onPrevious, onNext }:
           <AnimatePresence mode="wait">
             <motion.img
               key={currentPhoto.id}
-              src={currentPhoto.src}
+              src={resolveImageSrc(currentPhoto.src)}
               alt={currentPhoto.alt}
               className={`
                 max-h-[85vh] object-contain rounded-lg
@@ -228,6 +229,13 @@ const Lightbox = ({ photos, currentIndex, isOpen, onClose, onPrevious, onNext }:
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.3 }}
+              onError={(e) => {
+                const img = e.currentTarget as HTMLImageElement;
+                if (!img.dataset.fallbackApplied) {
+                  img.dataset.fallbackApplied = "1";
+                  img.src = resolveDriveThumb(currentPhoto.src, 2000);
+                }
+              }}
               draggable={false}
             />
           </AnimatePresence>
@@ -280,9 +288,16 @@ const Lightbox = ({ photos, currentIndex, isOpen, onClose, onPrevious, onNext }:
                   whileHover={{ scale: actualIndex === currentIndex ? 1.1 : 1.05 }}
                 >
                   <img
-                    src={photo.src}
+                    src={resolveImageSrc(photo.src)}
                     alt={photo.alt}
                     className="w-full h-full object-cover"
+                    onError={(e) => {
+                      const img = e.currentTarget as HTMLImageElement;
+                      if (!img.dataset.fallbackApplied) {
+                        img.dataset.fallbackApplied = "1";
+                        img.src = resolveDriveThumb(photo.src, 400);
+                      }
+                    }}
                   />
                 </motion.button>
               );
