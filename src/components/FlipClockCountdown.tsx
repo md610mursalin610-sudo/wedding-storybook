@@ -34,27 +34,27 @@ const FlipCard = ({ value, label }: { value: number; label: string }) => {
         {/* Card Container */}
         <div className="relative w-16 h-20 sm:w-20 sm:h-24 md:w-24 md:h-28 lg:w-28 lg:h-32 perspective-1000">
           {/* Main Card */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#1a1a2e] to-[#0d0d1a] rounded-xl sm:rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] overflow-hidden border border-gold/10">
+          <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--champagne)/0.9)] to-[hsl(var(--blush)/0.9)] rounded-xl sm:rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.15)] overflow-hidden border border-gold/20">
             {/* Top Half */}
             <div className="absolute top-0 left-0 right-0 h-1/2 overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-b from-[#252545] to-[#1a1a2e]" />
+              <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--gold-light)/0.6)] to-[hsl(var(--champagne)/0.6)]" />
               <div className="absolute inset-0 flex items-end justify-center pb-0">
-                <span className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-ivory/95 translate-y-1/2">
+                <span className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[hsl(var(--burgundy))] translate-y-1/2">
                   {displayValue}
                 </span>
               </div>
             </div>
 
             {/* Center Line */}
-            <div className="absolute top-1/2 left-0 right-0 h-px bg-black/40 z-10" />
-            <div className="absolute top-1/2 left-0 w-2 h-3 -translate-y-1/2 bg-black/30 rounded-r-full" />
-            <div className="absolute top-1/2 right-0 w-2 h-3 -translate-y-1/2 bg-black/30 rounded-l-full" />
+            <div className="absolute top-1/2 left-0 right-0 h-px bg-[hsl(var(--gold-dark)/0.35)] z-10" />
+            <div className="absolute top-1/2 left-0 w-2 h-3 -translate-y-1/2 bg-[hsl(var(--gold-dark)/0.25)] rounded-r-full" />
+            <div className="absolute top-1/2 right-0 w-2 h-3 -translate-y-1/2 bg-[hsl(var(--gold-dark)/0.25)] rounded-l-full" />
 
             {/* Bottom Half */}
             <div className="absolute bottom-0 left-0 right-0 h-1/2 overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-b from-[#1a1a2e] to-[#0d0d1a]" />
+              <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--blush)/0.9)] to-[hsl(var(--rose)/0.9)]" />
               <div className="absolute inset-0 flex items-start justify-center pt-0">
-                <span className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-ivory/90 -translate-y-1/2">
+                <span className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[hsl(var(--burgundy))] -translate-y-1/2">
                   {displayValue}
                 </span>
               </div>
@@ -75,9 +75,9 @@ const FlipCard = ({ value, label }: { value: number; label: string }) => {
                 exit={{ rotateX: -90 }}
                 transition={{ duration: 0.3, ease: "easeIn" }}
               >
-                <div className="absolute inset-0 bg-gradient-to-b from-[#252545] to-[#1a1a2e] border border-gold/10" />
+                <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--gold-light)/0.6)] to-[hsl(var(--champagne)/0.6)] border border-gold/20" />
                 <div className="absolute inset-0 flex items-end justify-center pb-0">
-                  <span className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-ivory/95 translate-y-1/2">
+                  <span className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[hsl(var(--burgundy))] translate-y-1/2">
                     {prevValue}
                   </span>
                 </div>
@@ -87,11 +87,11 @@ const FlipCard = ({ value, label }: { value: number; label: string }) => {
         </div>
 
         {/* Glow Effect */}
-        <div className="absolute -inset-2 bg-gold/5 rounded-2xl blur-xl -z-10" />
+        <div className="absolute -inset-2 bg-gold/10 rounded-2xl blur-xl -z-10" />
       </div>
 
       {/* Label */}
-      <span className="font-accent text-[10px] sm:text-xs md:text-sm tracking-[0.3em] uppercase text-gold/80">
+      <span className="font-accent text-[10px] sm:text-xs md:text-sm tracking-[0.3em] uppercase text-gold/90">
         {label}
       </span>
     </div>
