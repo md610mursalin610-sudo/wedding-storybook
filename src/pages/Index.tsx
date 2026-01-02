@@ -4,6 +4,7 @@ import MasonryGallery from "@/components/MasonryGallery";
 import Lightbox from "@/components/Lightbox";
 import Footer from "@/components/Footer";
 import FloatingPetals from "@/components/FloatingPetals";
+import MusicPlayer from "@/components/MusicPlayer";
 
 // Wedding photos with categories and varied aspect ratios
 const weddingPhotos = [
@@ -52,6 +53,9 @@ const Index = () => {
 
   return (
     <main className="min-h-screen relative">
+      {/* Background music player */}
+      <MusicPlayer />
+      
       {/* Floating petals animation */}
       <FloatingPetals />
 
