@@ -21,6 +21,17 @@ const HeroSection = ({ coupleNames, weddingDate, backgroundImage }: HeroSectionP
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   const names = coupleNames.split(" & ");
+  const d = new Date(weddingDate);
+  const day = d.getDate();
+  const suffix = (n: number) => {
+    const j = n % 10, k = n % 100;
+    if (j === 1 && k !== 11) return "st";
+    if (j === 2 && k !== 12) return "nd";
+    if (j === 3 && k !== 13) return "rd";
+    return "th";
+  };
+  const month = d.toLocaleString("en-US", { month: "long" });
+  const displayDate = `${day}${suffix(day)} ${month}`;
 
   return (
     <section ref={ref} className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -121,7 +132,7 @@ const HeroSection = ({ coupleNames, weddingDate, backgroundImage }: HeroSectionP
           <div className="absolute -inset-4 bg-gold/5 rounded-full blur-xl" />
           <div className="inline-flex items-center px-6 py-2.5 rounded-2xl bg-[#EBC4D2]/70 border border-[#D49AAA]/50 shadow-[0_6px_20px_rgba(0,0,0,0.06)] backdrop-blur-[2px]">
             <p className="relative font-display text-xl md:text-2xl lg:text-3xl italic text-[#8F4455] tracking-wide">
-              {weddingDate}
+              {displayDate}
             </p>
           </div>
         </motion.div>

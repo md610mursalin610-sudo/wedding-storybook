@@ -42,7 +42,7 @@ const Index = () => {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 
   const coupleNames = "Laboni Akhter & Adnan Arif";
-  const weddingDate = "December 26, 2024";
+  const weddingDate = "November 1, 2024";
   const heroImage = "/herosection.jpg";
 
   const handlePhotoClick = (index: number) => {
