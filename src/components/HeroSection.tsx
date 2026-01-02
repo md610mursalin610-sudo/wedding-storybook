@@ -106,7 +106,7 @@ const HeroSection = ({ coupleNames, weddingDate, backgroundImage }: HeroSectionP
         {/* Couple Names - Animated */}
         <div className="relative mb-8">
           <motion.h1
-            className="font-display text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-medium tracking-wide text-foreground"
+            className="font-accent text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-medium tracking-wide text-ivory drop-shadow-[0_2px_4px_rgba(0,0,0,0.35)]"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.5 }}
@@ -124,7 +124,7 @@ const HeroSection = ({ coupleNames, weddingDate, backgroundImage }: HeroSectionP
           </motion.span>
           
           <motion.h1
-            className="font-display text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-medium tracking-wide text-foreground"
+            className="font-accent text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-medium tracking-wide text-ivory drop-shadow-[0_2px_4px_rgba(0,0,0,0.35)]"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.7 }}
@@ -153,21 +153,21 @@ const HeroSection = ({ coupleNames, weddingDate, backgroundImage }: HeroSectionP
           transition={{ duration: 0.8, delay: 1.1 }}
         >
           <div className="flex items-stretch gap-2 md:gap-4">
-            <div className="px-4 py-3 rounded-2xl bg-foreground/80 text-background border border-gold/20 shadow-elegant backdrop-blur-sm min-w-[72px] text-center">
-              <div className="font-display text-2xl md:text-3xl leading-none">{timeLeft.days}</div>
-              <div className="font-accent text-[10px] md:text-xs tracking-[0.25em] uppercase opacity-80">Days</div>
+            <div className="px-4 py-3 rounded-2xl bg-background/85 text-foreground ring-1 ring-gold/25 shadow-gold backdrop-blur-sm min-w-[72px] text-center">
+              <div className="font-display text-2xl md:text-3xl leading-none text-gradient-gold">{timeLeft.days}</div>
+              <div className="font-accent text-[10px] md:text-xs tracking-[0.25em] uppercase text-muted-foreground">Days</div>
             </div>
-            <div className="px-4 py-3 rounded-2xl bg-foreground/80 text-background border border-gold/20 shadow-elegant backdrop-blur-sm min-w-[72px] text-center">
-              <div className="font-display text-2xl md:text-3xl leading-none">{timeLeft.hours}</div>
-              <div className="font-accent text-[10px] md:text-xs tracking-[0.25em] uppercase opacity-80">Hours</div>
+            <div className="px-4 py-3 rounded-2xl bg-background/85 text-foreground ring-1 ring-gold/25 shadow-gold backdrop-blur-sm min-w-[72px] text-center">
+              <div className="font-display text-2xl md:text-3xl leading-none text-gradient-gold">{timeLeft.hours}</div>
+              <div className="font-accent text-[10px] md:text-xs tracking-[0.25em] uppercase text-muted-foreground">Hours</div>
             </div>
-            <div className="px-4 py-3 rounded-2xl bg-foreground/80 text-background border border-gold/20 shadow-elegant backdrop-blur-sm min-w-[72px] text-center">
-              <div className="font-display text-2xl md:text-3xl leading-none">{timeLeft.minutes}</div>
-              <div className="font-accent text-[10px] md:text-xs tracking-[0.25em] uppercase opacity-80">Minutes</div>
+            <div className="px-4 py-3 rounded-2xl bg-background/85 text-foreground ring-1 ring-gold/25 shadow-gold backdrop-blur-sm min-w-[72px] text-center">
+              <div className="font-display text-2xl md:text-3xl leading-none text-gradient-gold">{timeLeft.minutes}</div>
+              <div className="font-accent text-[10px] md:text-xs tracking-[0.25em] uppercase text-muted-foreground">Minutes</div>
             </div>
-            <div className="px-4 py-3 rounded-2xl bg-foreground/80 text-background border border-gold/20 shadow-elegant backdrop-blur-sm min-w-[72px] text-center">
-              <div className="font-display text-2xl md:text-3xl leading-none">{timeLeft.seconds}</div>
-              <div className="font-accent text-[10px] md:text-xs tracking-[0.25em] uppercase opacity-80">Seconds</div>
+            <div className="px-4 py-3 rounded-2xl bg-background/85 text-foreground ring-1 ring-gold/25 shadow-gold backdrop-blur-sm min-w-[72px] text-center">
+              <div className="font-display text-2xl md:text-3xl leading-none text-gradient-gold">{timeLeft.seconds}</div>
+              <div className="font-accent text-[10px] md:text-xs tracking-[0.25em] uppercase text-muted-foreground">Seconds</div>
             </div>
           </div>
         </motion.div>
