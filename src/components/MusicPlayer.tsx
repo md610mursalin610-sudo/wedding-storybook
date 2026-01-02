@@ -36,6 +36,8 @@ const MusicPlayer = () => {
   const [isMuted, setIsMuted] = useState(false);
   const [showPrompt, setShowPrompt] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isPlaylistOpen, setIsPlaylistOpen] = useState(false);
+  const [isTrayHovered, setIsTrayHovered] = useState(false);
   const [isTouch, setIsTouch] = useState(false);
   const [isSmall, setIsSmall] = useState(false);
   const [trayWidth, setTrayWidth] = useState(320);
@@ -136,15 +138,22 @@ const MusicPlayer = () => {
     }
   };
 
-  const [showList, setShowList] = useState(false);
   const selectTrack = (index: number) => {
     setCurrentTrackIndex(index);
     setIsPlaying(true);
     setShowPrompt(false);
-    setShowList(false);
+    setIsPlaylistOpen(false);
   };
 
   const mobileSliderW = Math.max(60, Math.min(120, trayWidth - 260));
+
+  useEffect(() => {
+    if (isPlaylistOpen || isTrayHovered) {
+      setIsExpanded(true);
+    } else {
+      setIsExpanded(false);
+    }
+  }, [isPlaylistOpen, isTrayHovered]);
 
   return (
     <>
@@ -237,8 +246,8 @@ const MusicPlayer = () => {
             ${isExpanded ? 'px-4 py-2' : (isSmall ? 'p-1.5' : 'p-0')}
           `}
           style={{ position: 'relative' }}
-          onHoverStart={!isTouch ? () => setIsExpanded(true) : undefined}
-          onHoverEnd={!isTouch ? () => { if (!showList) { setIsExpanded(false); } } : undefined}
+          onMouseEnter={!isTouch ? () => setIsTrayHovered(true) : undefined}
+          onMouseLeave={!isTouch ? () => setIsTrayHovered(false) : undefined}
           onClick={isTouch ? () => setIsExpanded(v => !v) : undefined}
         >
           {/* Controls tray (slides open to the left on small screens) */}
@@ -248,121 +257,90 @@ const MusicPlayer = () => {
             animate={isSmall ? { width: isExpanded ? trayWidth : 0, opacity: isExpanded ? 1 : 0 } : undefined}
             transition={{ duration: 0.25 }}
           >
-          {/* Previous button */}
-          <AnimatePresence>
-            {isExpanded && (
-              <motion.button
-                onClick={handlePrevious}
-                className={`${isSmall ? 'w-8 h-8' : 'w-9 h-9'} flex items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors`}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-              >
-                <SkipBack className="w-4 h-4" />
-              </motion.button>
-            )}
-          </AnimatePresence>
-
-          {/* Mute button - only visible when expanded */}
-          <AnimatePresence>
-            {isExpanded && (
-              <motion.button
-                onClick={toggleMute}
-                className={`${isSmall ? 'w-8 h-8' : 'w-9 h-9'} flex items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors`}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-              >
-                {isMuted ? (
-                  <VolumeX className="w-4 h-4" />
-                ) : (
-                  <Volume2 className="w-4 h-4" />
-                )}
-              </motion.button>
-            )}
-          </AnimatePresence>
-
-          {/* Now playing with anchored dropdown (desktop) */}
-          <div className="relative">
             <AnimatePresence>
               {isExpanded && (
-                <motion.span
-                  className={`font-body ${isSmall ? 'text-xs' : 'text-sm'} text-muted-foreground whitespace-nowrap cursor-pointer select-none ${isSmall ? 'max-w-[120px]' : 'max-w-[240px]'} truncate`}
-                  initial={{ opacity: 0, width: 0 }}
-                  animate={{ opacity: 1, width: 'auto' }}
-                  exit={{ opacity: 0, width: 0 }}
-                  onClick={() => { setIsExpanded(true); setShowList((v) => !v); }}
-                  onMouseEnter={!isTouch ? () => { setIsExpanded(true); setShowList(true); } : undefined}
-                  title={musicPlaylist[currentTrackIndex].title}
-                >
-                  {musicPlaylist[currentTrackIndex].title}
-                </motion.span>
-              )}
-            </AnimatePresence>
-
-            {/* Playlist dropdown */}
-            <AnimatePresence>
-              {isExpanded && showList && (
                 <motion.div
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 6 }}
-                  className={`absolute bottom-full ${isSmall ? 'left-1/2 -translate-x-1/2' : 'right-0'} mb-2 bg-background rounded-xl shadow-elegant border border-gold/20 overflow-hidden z-[60]`}
-                  onMouseLeave={!isTouch ? () => setShowList(false) : undefined}
+                  className="flex items-center gap-2"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
                 >
-                  <div className={`${isSmall ? 'min-w-[200px] max-w-[90vw]' : 'min-w-[240px]'} max-h-64 overflow-auto` }>
-                    {musicPlaylist.map((track, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => selectTrack(idx)}
-                        aria-selected={idx === currentTrackIndex}
-                        className={`w-full text-left px-4 py-3 text-sm font-body transition-colors ${idx === currentTrackIndex ? 'bg-gold/10 text-foreground border-l-2 border-gold' : 'text-muted-foreground hover:bg-muted'}`}
-                      >
-                        {track.title}
-                      </button>
-                    ))}
+                  {/* Previous button */}
+                  <button
+                    onClick={handlePrevious}
+                    className={`${isSmall ? 'w-8 h-8' : 'w-9 h-9'} flex items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors`}
+                  >
+                    <SkipBack className="w-4 h-4" />
+                  </button>
+
+                  {/* Mute button */}
+                  <button
+                    onClick={toggleMute}
+                    className={`${isSmall ? 'w-8 h-8' : 'w-9 h-9'} flex items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors`}
+                  >
+                    {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                  </button>
+
+                  {/* Now playing with anchored dropdown */}
+                  <div className="relative">
+                    <span
+                      className={`font-body ${isSmall ? 'text-xs' : 'text-sm'} text-muted-foreground whitespace-nowrap cursor-pointer select-none ${isSmall ? 'max-w-[120px]' : 'max-w-[240px]'} truncate`}
+                      onClick={() => setIsPlaylistOpen(v => !v)}
+                      onMouseEnter={!isTouch ? () => setIsPlaylistOpen(true) : undefined}
+                      title={musicPlaylist[currentTrackIndex].title}
+                    >
+                      {musicPlaylist[currentTrackIndex].title}
+                    </span>
+
+                    <AnimatePresence>
+                      {isPlaylistOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 6 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 6 }}
+                          className={`absolute bottom-full ${isSmall ? 'left-1/2 -translate-x-1/2' : 'right-0'} mb-2 bg-background rounded-xl shadow-elegant border border-gold/20 overflow-hidden z-[60]`}
+                          onMouseLeave={!isTouch ? () => setIsPlaylistOpen(false) : undefined}
+                        >
+                          <div className={`${isSmall ? 'min-w-[200px] max-w-[90vw]' : 'min-w-[240px]'} max-h-64 overflow-auto`}>
+                            {musicPlaylist.map((track, idx) => (
+                              <button
+                                key={idx}
+                                onClick={() => selectTrack(idx)}
+                                aria-selected={idx === currentTrackIndex}
+                                className={`w-full text-left px-4 py-3 text-sm font-body transition-colors ${idx === currentTrackIndex ? 'bg-gold/10 text-foreground border-l-2 border-gold' : 'text-muted-foreground hover:bg-muted'}`}
+                              >
+                                {track.title}
+                              </button>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  {/* Next button */}
+                  <button
+                    onClick={handleNext}
+                    className={`${isSmall ? 'w-8 h-8' : 'w-9 h-9'} flex items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors`}
+                  >
+                    <SkipForward className="w-4 h-4" />
+                  </button>
+
+                  {/* Volume Slider */}
+                  <div className="flex-1 min-w-[40px]">
+                    <input
+                      type="range"
+                      min="0"
+                      max="1"
+                      step="0.01"
+                      value={volume}
+                      onChange={handleVolumeChange}
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+                    />
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
-          </div>
-
-          {/* Next button */}
-          <AnimatePresence>
-            {isExpanded && (
-              <motion.button
-                onClick={handleNext}
-                className={`${isSmall ? 'w-8 h-8' : 'w-9 h-9'} flex items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors`}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-              >
-                <SkipForward className="w-4 h-4" />
-              </motion.button>
-            )}
-          </AnimatePresence>
-
-          {/* Volume Slider */}
-          <AnimatePresence>
-            {isExpanded && (!isSmall || trayWidth >= 320) && (
-              <motion.div
-                initial={{ opacity: 0, width: 0 }}
-                animate={{ opacity: 1, width: isSmall ? mobileSliderW : 120 }}
-                exit={{ opacity: 0, width: 0 }}
-              >
-                <input
-                  type="range"
-                  min="0"
-                  max="1"
-                  step="0.01"
-                  value={volume}
-                  onChange={handleVolumeChange}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
-
           </motion.div>
 
           {/* Main play/pause button */}
