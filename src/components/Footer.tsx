@@ -93,6 +93,20 @@ const Footer = ({ coupleNames }: FooterProps) => {
           <p className="font-body text-xs text-muted-foreground/60 mt-4">
             With love and gratitude
           </p>
+          <div className="mt-5 flex items-center justify-center gap-3">
+            <span className="font-body text-sm text-foreground/80">
+              © {new Date().getFullYear()} Abu Syed Islam
+            </span>
+            <span className="w-1 h-1 rounded-full bg-gold/50" />
+            <a
+              href="https://github.com/abushaidislam"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-body text-sm text-gradient-gold underline decoration-gold/40 underline-offset-4 hover:text-gold"
+            >
+              GitHub
+            </a>
+          </div>
         </motion.div>
       </div>
     </footer>
