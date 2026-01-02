@@ -30,7 +30,7 @@ const Index = () => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 
-  const coupleNames = "Emma & James";
+  const coupleNames = "Laboni Akhter & Adnan Arif";
   const weddingDate = "September 15, 2024";
   const heroImage = "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=1920&q=80";
 

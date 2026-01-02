@@ -124,7 +124,7 @@ const MasonryGallery = ({ photos, onPhotoClick }: MasonryGalleryProps) => {
               />
 
               {/* Hover Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-foreground/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 via-foreground/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
               {/* View indicator */}
               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
@@ -140,11 +140,14 @@ const MasonryGallery = ({ photos, onPhotoClick }: MasonryGalleryProps) => {
               </div>
 
               {/* Caption */}
-              <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <p className="text-white text-sm font-body bg-black/50 p-2 rounded">
-                  {photo.caption}
-                </p>
-              </div>
+              <motion.div
+                className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300"
+                initial={false}
+              >
+                <div className="px-3 py-2 rounded-xl bg-foreground/80 text-background shadow-elegant backdrop-blur-sm">
+                  <p className="font-body text-[0.9rem] leading-snug">{photo.caption}</p>
+                </div>
+              </motion.div>
             </motion.div>
           </motion.div>
         ))}
