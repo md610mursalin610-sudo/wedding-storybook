@@ -8,8 +8,8 @@ const musicPlaylist = [
     url: "https://cdn.pixabay.com/audio/2022/01/18/audio_d0a13f69d2.mp3",
   },
   {
-    title: "Acoustic Motivation",
-    url: "https://cdn.pixabay.com/audio/2022/08/04/audio_25b32906e3.mp3",
+    title: "Touching Piano",
+    url: "https://youtu.be/17aqk4WUhIA?si=m2agCiCmBrcqrh3g",
   },
   {
     title: "Relaxing Harp",
