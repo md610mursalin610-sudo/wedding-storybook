@@ -110,12 +110,12 @@ const Lightbox = ({ photos, currentIndex, isOpen, onClose, onPrevious, onNext }:
         <div className="absolute top-4 left-4 right-4 md:top-8 md:left-8 md:right-8 z-20 flex items-center justify-between">
           {/* Photo counter */}
           <motion.div
-            className="glass px-4 py-2 rounded-full"
+            className="px-4 py-2 rounded-full bg-foreground/80 text-background shadow-elegant"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <span className="font-body text-sm tracking-widest text-background/90">
+            <span className="font-body text-sm tracking-widest">
               {currentIndex + 1} / {photos.length}
             </span>
           </motion.div>
@@ -124,7 +124,7 @@ const Lightbox = ({ photos, currentIndex, isOpen, onClose, onPrevious, onNext }:
           <div className="flex items-center gap-2">
             <motion.button
               onClick={() => setIsZoomed(!isZoomed)}
-              className="w-11 h-11 flex items-center justify-center rounded-full glass text-background/90 hover:bg-background/20 transition-colors"
+              className="w-11 h-11 flex items-center justify-center rounded-full bg-foreground/80 text-background hover:bg-foreground/90 transition-colors shadow-elegant"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               initial={{ opacity: 0, y: -20 }}
@@ -136,7 +136,7 @@ const Lightbox = ({ photos, currentIndex, isOpen, onClose, onPrevious, onNext }:
 
             <motion.button
               onClick={() => setIsSlideshowActive(!isSlideshowActive)}
-              className="w-11 h-11 flex items-center justify-center rounded-full glass text-background/90 hover:bg-background/20 transition-colors"
+              className="w-11 h-11 flex items-center justify-center rounded-full bg-foreground/80 text-background hover:bg-foreground/90 transition-colors shadow-elegant"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               initial={{ opacity: 0, y: -20 }}
@@ -148,7 +148,7 @@ const Lightbox = ({ photos, currentIndex, isOpen, onClose, onPrevious, onNext }:
 
             <motion.button
               onClick={handleDownload}
-              className="w-11 h-11 flex items-center justify-center rounded-full glass text-background/90 hover:bg-background/20 transition-colors"
+              className="w-11 h-11 flex items-center justify-center rounded-full bg-foreground/80 text-background hover:bg-foreground/90 transition-colors shadow-elegant"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               initial={{ opacity: 0, y: -20 }}
@@ -160,7 +160,7 @@ const Lightbox = ({ photos, currentIndex, isOpen, onClose, onPrevious, onNext }:
 
             <motion.button
               onClick={onClose}
-              className="w-11 h-11 flex items-center justify-center rounded-full glass text-background/90 hover:bg-background/20 transition-colors"
+              className="w-11 h-11 flex items-center justify-center rounded-full bg-foreground/80 text-background hover:bg-foreground/90 transition-colors shadow-elegant"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               initial={{ opacity: 0, y: -20 }}
@@ -176,7 +176,7 @@ const Lightbox = ({ photos, currentIndex, isOpen, onClose, onPrevious, onNext }:
         {!isZoomed && (
           <motion.button
             onClick={onPrevious}
-            className="absolute left-2 md:left-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full glass text-background/90 hover:bg-background/20 transition-all"
+            className="absolute left-2 md:left-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-foreground/80 text-background hover:bg-foreground/90 transition-all shadow-elegant"
             whileHover={{ scale: 1.1, x: -4 }}
             whileTap={{ scale: 0.95 }}
             initial={{ opacity: 0, x: -20 }}
@@ -191,7 +191,7 @@ const Lightbox = ({ photos, currentIndex, isOpen, onClose, onPrevious, onNext }:
         {!isZoomed && (
           <motion.button
             onClick={onNext}
-            className="absolute right-2 md:right-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full glass text-background/90 hover:bg-background/20 transition-all"
+            className="absolute right-2 md:right-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-foreground/80 text-background hover:bg-foreground/90 transition-all shadow-elegant"
             whileHover={{ scale: 1.1, x: 4 }}
             whileTap={{ scale: 0.95 }}
             initial={{ opacity: 0, x: 20 }}
