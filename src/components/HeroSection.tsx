@@ -55,8 +55,8 @@ const HeroSection = ({ coupleNames, weddingDate, backgroundImage }: HeroSectionP
         }}
       />
 
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-hero" />
+      {/* Gradient Overlay - softened gold tint to replace harsh white shadow */}
+      <div className="absolute inset-0 bg-gradient-to-b from-gold/10 via-background/30 to-transparent" />
 
       {/* Decorative Corner Elements */}
       <div className="absolute top-8 left-8 w-24 h-24 border-l-2 border-t-2 border-gold/30 rounded-tl-lg" />
@@ -141,9 +141,11 @@ const HeroSection = ({ coupleNames, weddingDate, backgroundImage }: HeroSectionP
           transition={{ duration: 0.8, delay: 1 }}
         >
           <div className="absolute -inset-4 bg-gold/5 rounded-full blur-xl" />
-          <p className="relative font-display text-xl md:text-2xl lg:text-3xl italic text-gradient-gold">
-            {weddingDate}
-          </p>
+          <div className="inline-flex items-center px-6 py-2.5 rounded-2xl bg-[#EBC4D2]/70 border border-[#D49AAA]/50 shadow-[0_6px_20px_rgba(0,0,0,0.06)] backdrop-blur-[2px]">
+            <p className="relative font-display text-xl md:text-2xl lg:text-3xl italic text-[#8F4455] tracking-wide">
+              {weddingDate}
+            </p>
+          </div>
         </motion.div>
 
         <motion.div
