@@ -1,21 +1,42 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Music, Pause, Play, Volume2, VolumeX } from "lucide-react";
+import { Music, Pause, Play, Volume2, VolumeX, SkipForward, SkipBack } from "lucide-react";
 
-// Royalty-free romantic piano music
-const MUSIC_URL = "https://cdn.pixabay.com/audio/2022/01/18/audio_d0a13f69d2.mp3";
+const musicPlaylist = [
+  {
+    title: "Romantic Piano",
+    url: "https://cdn.pixabay.com/audio/2022/01/18/audio_d0a13f69d2.mp3",
+  },
+  {
+    title: "Acoustic Motivation",
+    url: "https://cdn.pixabay.com/audio/2022/08/04/audio_25b32906e3.mp3",
+  },
+  {
+    title: "Relaxing Harp",
+    url: "https://cdn.pixabay.com/audio/2023/10/06/audio_1411544863.mp3",
+  },
+];
 
 const MusicPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [showPrompt, setShowPrompt] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  const [volume, setVolume] = useState(0.4);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    audioRef.current = new Audio(MUSIC_URL);
-    audioRef.current.loop = true;
-    audioRef.current.volume = 0.4;
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+    audioRef.current = new Audio(musicPlaylist[currentTrackIndex].url);
+    audioRef.current.loop = false;
+    audioRef.current.volume = volume;
+    if (isPlaying) {
+      audioRef.current.play().catch(console.error);
+    }
+    audioRef.current.onended = () => handleNext();
 
     return () => {
       if (audioRef.current) {
@@ -23,7 +44,7 @@ const MusicPlayer = () => {
         audioRef.current = null;
       }
     };
-  }, []);
+  }, [currentTrackIndex, isPlaying, volume]);
 
   const togglePlay = () => {
     if (!audioRef.current) return;
@@ -37,10 +58,26 @@ const MusicPlayer = () => {
     setIsPlaying(!isPlaying);
   };
 
+  const handleNext = () => {
+    setCurrentTrackIndex((prev) => (prev + 1) % musicPlaylist.length);
+  };
+
+  const handlePrevious = () => {
+    setCurrentTrackIndex((prev) => (prev - 1 + musicPlaylist.length) % musicPlaylist.length);
+  };
+
   const toggleMute = () => {
     if (!audioRef.current) return;
     audioRef.current.muted = !isMuted;
     setIsMuted(!isMuted);
+  };
+
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newVolume = parseFloat(e.target.value);
+    setVolume(newVolume);
+    if (audioRef.current) {
+      audioRef.current.volume = newVolume;
+    }
   };
 
   return (
@@ -120,6 +157,21 @@ const MusicPlayer = () => {
           onHoverStart={() => setIsExpanded(true)}
           onHoverEnd={() => setIsExpanded(false)}
         >
+          {/* Previous button */}
+          <AnimatePresence>
+            {isExpanded && isPlaying && (
+              <motion.button
+                onClick={handlePrevious}
+                className="w-9 h-9 flex items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+              >
+                <SkipBack className="w-4 h-4" />
+              </motion.button>
+            )}
+          </AnimatePresence>
+
           {/* Mute button - only visible when expanded */}
           <AnimatePresence>
             {isExpanded && (
@@ -148,8 +200,44 @@ const MusicPlayer = () => {
                 animate={{ opacity: 1, width: 'auto' }}
                 exit={{ opacity: 0, width: 0 }}
               >
-                Now Playing
+                {musicPlaylist[currentTrackIndex].title}
               </motion.span>
+            )}
+          </AnimatePresence>
+
+          {/* Next button */}
+          <AnimatePresence>
+            {isExpanded && isPlaying && (
+              <motion.button
+                onClick={handleNext}
+                className="w-9 h-9 flex items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+              >
+                <SkipForward className="w-4 h-4" />
+              </motion.button>
+            )}
+          </AnimatePresence>
+
+          {/* Volume Slider */}
+          <AnimatePresence>
+            {isExpanded && (
+              <motion.div
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: 100 }}
+                exit={{ opacity: 0, width: 0 }}
+              >
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  value={volume}
+                  onChange={handleVolumeChange}
+                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+                />
+              </motion.div>
             )}
           </AnimatePresence>
 
