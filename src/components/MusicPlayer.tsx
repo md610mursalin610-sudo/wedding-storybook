@@ -268,7 +268,8 @@ const MusicPlayer = () => {
                   {/* Previous button */}
                   <button
                     onClick={handlePrevious}
-                    className={`${isSmall ? 'w-8 h-8' : 'w-9 h-9'} flex items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors`}
+                    aria-label="Previous track"
+                    className={`${isSmall ? 'w-8 h-8' : 'w-9 h-9'} flex items-center justify-center rounded-full text-foreground/80 hover:text-foreground hover:bg-muted transition-colors`}
                   >
                     <SkipBack className="w-4 h-4" />
                   </button>
@@ -276,7 +277,8 @@ const MusicPlayer = () => {
                   {/* Mute button */}
                   <button
                     onClick={toggleMute}
-                    className={`${isSmall ? 'w-8 h-8' : 'w-9 h-9'} flex items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors`}
+                    aria-label={isMuted ? 'Unmute audio' : 'Mute audio'}
+                    className={`${isSmall ? 'w-8 h-8' : 'w-9 h-9'} flex items-center justify-center rounded-full text-foreground/80 hover:text-foreground hover:bg-muted transition-colors`}
                   >
                     {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
                   </button>
@@ -321,7 +323,8 @@ const MusicPlayer = () => {
                   {/* Next button */}
                   <button
                     onClick={handleNext}
-                    className={`${isSmall ? 'w-8 h-8' : 'w-9 h-9'} flex items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors`}
+                    aria-label="Next track"
+                    className={`${isSmall ? 'w-8 h-8' : 'w-9 h-9'} flex items-center justify-center rounded-full text-foreground/80 hover:text-foreground hover:bg-muted transition-colors`}
                   >
                     <SkipForward className="w-4 h-4" />
                   </button>

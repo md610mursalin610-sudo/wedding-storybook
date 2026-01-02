@@ -126,6 +126,7 @@ const Lightbox = ({ photos, currentIndex, isOpen, onClose, onPrevious, onNext }:
           <div className="flex items-center gap-2">
             <motion.button
               onClick={() => setIsZoomed(!isZoomed)}
+              aria-label={isZoomed ? "Zoom out" : "Zoom in"}
               className="w-11 h-11 flex items-center justify-center rounded-full bg-foreground/80 text-background hover:bg-foreground/90 transition-colors shadow-elegant"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
@@ -138,6 +139,7 @@ const Lightbox = ({ photos, currentIndex, isOpen, onClose, onPrevious, onNext }:
 
             <motion.button
               onClick={() => setIsSlideshowActive(!isSlideshowActive)}
+              aria-label={isSlideshowActive ? "Pause slideshow" : "Play slideshow"}
               className="w-11 h-11 flex items-center justify-center rounded-full bg-foreground/80 text-background hover:bg-foreground/90 transition-colors shadow-elegant"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
@@ -150,6 +152,7 @@ const Lightbox = ({ photos, currentIndex, isOpen, onClose, onPrevious, onNext }:
 
             <motion.button
               onClick={handleDownload}
+              aria-label="Download image"
               className="w-11 h-11 flex items-center justify-center rounded-full bg-foreground/80 text-background hover:bg-foreground/90 transition-colors shadow-elegant"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
@@ -162,6 +165,7 @@ const Lightbox = ({ photos, currentIndex, isOpen, onClose, onPrevious, onNext }:
 
             <motion.button
               onClick={onClose}
+              aria-label="Close lightbox"
               className="w-11 h-11 flex items-center justify-center rounded-full bg-foreground/80 text-background hover:bg-foreground/90 transition-colors shadow-elegant"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
@@ -178,6 +182,7 @@ const Lightbox = ({ photos, currentIndex, isOpen, onClose, onPrevious, onNext }:
         {!isZoomed && (
           <motion.button
             onClick={onPrevious}
+            aria-label="Previous image"
             className="absolute left-2 md:left-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-foreground/80 text-background hover:bg-foreground/90 transition-all shadow-elegant"
             whileHover={{ scale: 1.1, x: -4 }}
             whileTap={{ scale: 0.95 }}
@@ -193,6 +198,7 @@ const Lightbox = ({ photos, currentIndex, isOpen, onClose, onPrevious, onNext }:
         {!isZoomed && (
           <motion.button
             onClick={onNext}
+            aria-label="Next image"
             className="absolute right-2 md:right-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-foreground/80 text-background hover:bg-foreground/90 transition-all shadow-elegant"
             whileHover={{ scale: 1.1, x: 4 }}
             whileTap={{ scale: 0.95 }}
@@ -277,6 +283,7 @@ const Lightbox = ({ photos, currentIndex, isOpen, onClose, onPrevious, onNext }:
                       for (let j = 0; j < Math.abs(diff); j++) onPrevious();
                     }
                   }}
+                  aria-label={`View image ${actualIndex + 1}`}
                   className={`
                     w-12 h-12 md:w-14 md:h-14 rounded-lg overflow-hidden flex-shrink-0
                     transition-all duration-200

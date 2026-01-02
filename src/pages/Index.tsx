@@ -24,14 +24,14 @@ const weddingPhotos = [
   { id: 14, src: "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=600&q=80", alt: "Bride portrait", category: "Portraits", caption: "A stunning portrait of the bride." },
   { id: 15, src: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800&q=80", alt: "Garden ceremony", category: "Ceremony", caption: "A beautiful garden ceremony." },
   { id: 16, src: "https://images.unsplash.com/photo-1478146059778-26028b07395a?w=600&q=80", alt: "Table settings", category: "Details", caption: "Elegant table settings." },
-  // Google Drive images provided by user (cleaned)
-  { id: 17, src: "https://drive.google.com/file/d/1NRKKgaZVnob1J5h-AxsQcQ-JQcKrXF0z/view?usp=sharing", alt: "Album photo 1", category: "Portraits", caption: "Album photo." },
-  { id: 18, src: "https://drive.google.com/open?id=1-00cE1bJGEbcbiGu7j3Gl6-xn59LDge1&usp=sharing", alt: "Album photo 2", category: "Portraits", caption: "Album photo." },
-  { id: 19, src: "https://drive.google.com/open?id=100ntGluuZBHNoCOfeWuZLai0W6t0nopd&usp=sharing", alt: "Album photo 3", category: "Portraits", caption: "Album photo." },
-  { id: 20, src: "https://drive.google.com/open?id=1nCyA9sMcdL4hqJBUPqfe52ZigDeBk4sk&usp=sharing", alt: "Album photo 4", category: "Portraits", caption: "Album photo." },
-  // id 21 was malformed (trailing '-') — awaiting correct link from user
-  { id: 22, src: "https://drive.google.com/open?id=14lmjJHgm7XCOAjokIOME1US94OEu42Oi&usp=sharing", alt: "Album photo 6", category: "Portraits", caption: "Album photo." },
-  { id: 23, src: "https://drive.google.com/open?id=1XDLgdQqhff6Hf5-3csr_bNxZBrw4eDhx&usp=sharing", alt: "Album photo 7", category: "Portraits", caption: "Album photo." },
+  // // Google Drive images provided by user (cleaned)
+  // { id: 17, src: "https://drive.google.com/file/d/1NRKKgaZVnob1J5h-AxsQcQ-JQcKrXF0z/view?usp=sharing", alt: "Album photo 1", category: "Portraits", caption: "Album photo." },
+  // { id: 18, src: "https://drive.google.com/open?id=1-00cE1bJGEbcbiGu7j3Gl6-xn59LDge1&usp=sharing", alt: "Album photo 2", category: "Portraits", caption: "Album photo." },
+  // { id: 19, src: "https://drive.google.com/open?id=100ntGluuZBHNoCOfeWuZLai0W6t0nopd&usp=sharing", alt: "Album photo 3", category: "Portraits", caption: "Album photo." },
+  // { id: 20, src: "https://drive.google.com/open?id=1nCyA9sMcdL4hqJBUPqfe52ZigDeBk4sk&usp=sharing", alt: "Album photo 4", category: "Portraits", caption: "Album photo." },
+  // // id 21 was malformed (trailing '-') — awaiting correct link from user
+  // { id: 22, src: "https://drive.google.com/open?id=14lmjJHgm7XCOAjokIOME1US94OEu42Oi&usp=sharing", alt: "Album photo 6", category: "Portraits", caption: "Album photo." },
+  // { id: 23, src: "https://drive.google.com/open?id=1XDLgdQqhff6Hf5-3csr_bNxZBrw4eDhx&usp=sharing", alt: "Album photo 7", category: "Portraits", caption: "Album photo." },
 ];
 
 const Index = () => {

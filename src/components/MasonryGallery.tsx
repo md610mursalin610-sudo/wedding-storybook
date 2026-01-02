@@ -67,12 +67,14 @@ const MasonryGallery = ({ photos, onPhotoClick }: MasonryGalleryProps) => {
             <motion.button
               key={category}
               onClick={() => setActiveCategory(category)}
+              type="button"
+              aria-pressed={activeCategory === category}
               className={`
                 px-5 py-2.5 rounded-full font-body text-sm md:text-base tracking-wider
                 transition-all duration-300 border
                 ${activeCategory === category
                   ? "bg-gold text-accent-foreground border-gold shadow-gold"
-                  : "bg-transparent text-muted-foreground border-border hover:border-gold/50 hover:text-foreground"
+                  : "bg-transparent text-foreground/85 border-foreground/30 hover:border-gold/60 hover:text-foreground"
                 }
               `}
               whileHover={{ scale: 1.05 }}
