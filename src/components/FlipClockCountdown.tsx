@@ -32,14 +32,14 @@ const FlipCard = ({ value, label }: { value: number; label: string }) => {
     <div className="flex flex-col items-center gap-2">
       <div className="relative">
         {/* Card Container */}
-        <div className="relative w-16 h-20 sm:w-20 sm:h-24 md:w-24 md:h-28 lg:w-28 lg:h-32 perspective-1000">
+        <div className="relative w-16 h-20 sm:w-20 sm:h-24 md:w-24 md:h-28 lg:w-28 lg:h-32 perspective-1000 [transform-style:preserve-3d]">
           {/* Main Card */}
           <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--champagne)/0.9)] to-[hsl(var(--blush)/0.9)] rounded-xl sm:rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.15)] overflow-hidden border border-gold/20">
             {/* Top Half */}
             <div className="absolute top-0 left-0 right-0 h-1/2 overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--gold-light)/0.6)] to-[hsl(var(--champagne)/0.6)]" />
               <div className="absolute inset-0 flex items-end justify-center pb-0">
-                <span className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[hsl(var(--burgundy))] translate-y-1/2">
+                <span className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[hsl(var(--burgundy))] translate-y-1/2 [backface-visibility:hidden]">
                   {displayValue}
                 </span>
               </div>
@@ -54,7 +54,7 @@ const FlipCard = ({ value, label }: { value: number; label: string }) => {
             <div className="absolute bottom-0 left-0 right-0 h-1/2 overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--blush)/0.9)] to-[hsl(var(--rose)/0.9)]" />
               <div className="absolute inset-0 flex items-start justify-center pt-0">
-                <span className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[hsl(var(--burgundy))] -translate-y-1/2">
+                <span className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[hsl(var(--burgundy))] -translate-y-1/2 [backface-visibility:hidden]">
                   {displayValue}
                 </span>
               </div>
@@ -73,14 +73,37 @@ const FlipCard = ({ value, label }: { value: number; label: string }) => {
                 initial={{ rotateX: 0 }}
                 animate={{ rotateX: -90 }}
                 exit={{ rotateX: -90 }}
-                transition={{ duration: 0.3, ease: "easeIn" }}
+                transition={{ duration: 0.32, ease: "easeIn" }}
               >
                 <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--gold-light)/0.6)] to-[hsl(var(--champagne)/0.6)] border border-gold/20" />
                 <div className="absolute inset-0 flex items-end justify-center pb-0">
-                  <span className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[hsl(var(--burgundy))] translate-y-1/2">
+                  <span className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[hsl(var(--burgundy))] translate-y-1/2 [backface-visibility:hidden]">
                     {prevValue}
                   </span>
                 </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Bottom Half Flip (incoming value) */}
+          <AnimatePresence mode="popLayout">
+            {isFlipping && (
+              <motion.div
+                key={`${displayValue}-bottom`}
+                className="absolute bottom-0 left-0 right-0 h-1/2 overflow-hidden rounded-b-xl sm:rounded-b-2xl origin-top z-10 will-change-transform"
+                initial={{ rotateX: 90 }}
+                animate={{ rotateX: 0 }}
+                exit={{ rotateX: 0 }}
+                transition={{ duration: 0.32, ease: "easeOut" }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--blush)/0.9)] to-[hsl(var(--rose)/0.9)] border-t border-gold/20" />
+                <div className="absolute inset-0 flex items-start justify-center pt-0">
+                  <span className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[hsl(var(--burgundy))] -translate-y-1/2 [backface-visibility:hidden]">
+                    {displayValue}
+                  </span>
+                </div>
+                {/* Dynamic shadow to sell the flip */}
+                <div className="absolute -top-1 left-0 right-0 h-8 bg-black/10 blur-md" />
               </motion.div>
             )}
           </AnimatePresence>
