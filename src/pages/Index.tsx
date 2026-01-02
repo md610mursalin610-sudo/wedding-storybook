@@ -31,8 +31,8 @@ const Index = () => {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 
   const coupleNames = "Laboni Akhter & Adnan Arif";
-  const weddingDate = "September 15, 2024";
-  const heroImage = "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=1920&q=80";
+  const weddingDate = "December 26, 2024";
+  const heroImage = "/herosection.jpg";
 
   const handlePhotoClick = (index: number) => {
     setCurrentPhotoIndex(index);

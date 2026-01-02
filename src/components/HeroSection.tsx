@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Heart, ChevronDown } from "lucide-react";
 
@@ -20,6 +20,29 @@ const HeroSection = ({ coupleNames, weddingDate, backgroundImage }: HeroSectionP
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   const names = coupleNames.split(" & ");
+
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+  useEffect(() => {
+    const wDate = new Date(weddingDate);
+    const tick = () => {
+      const now = new Date();
+      let next = new Date(now.getFullYear(), wDate.getMonth(), wDate.getDate());
+      if (next.getTime() < now.getTime()) {
+        next = new Date(now.getFullYear() + 1, wDate.getMonth(), wDate.getDate());
+      }
+      const diff = next.getTime() - now.getTime();
+      const totalSeconds = Math.max(0, Math.floor(diff / 1000));
+      const days = Math.floor(totalSeconds / (60 * 60 * 24));
+      const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
+      const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+      const seconds = totalSeconds % 60;
+      setTimeLeft({ days, hours, minutes, seconds });
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [weddingDate]);
 
   return (
     <section ref={ref} className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -121,6 +144,32 @@ const HeroSection = ({ coupleNames, weddingDate, backgroundImage }: HeroSectionP
           <p className="relative font-display text-xl md:text-2xl lg:text-3xl italic text-gradient-gold">
             {weddingDate}
           </p>
+        </motion.div>
+
+        <motion.div
+          className="mt-6 flex justify-center"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.1 }}
+        >
+          <div className="flex items-stretch gap-2 md:gap-4">
+            <div className="px-4 py-3 rounded-2xl bg-foreground/80 text-background border border-gold/20 shadow-elegant backdrop-blur-sm min-w-[72px] text-center">
+              <div className="font-display text-2xl md:text-3xl leading-none">{timeLeft.days}</div>
+              <div className="font-accent text-[10px] md:text-xs tracking-[0.25em] uppercase opacity-80">Days</div>
+            </div>
+            <div className="px-4 py-3 rounded-2xl bg-foreground/80 text-background border border-gold/20 shadow-elegant backdrop-blur-sm min-w-[72px] text-center">
+              <div className="font-display text-2xl md:text-3xl leading-none">{timeLeft.hours}</div>
+              <div className="font-accent text-[10px] md:text-xs tracking-[0.25em] uppercase opacity-80">Hours</div>
+            </div>
+            <div className="px-4 py-3 rounded-2xl bg-foreground/80 text-background border border-gold/20 shadow-elegant backdrop-blur-sm min-w-[72px] text-center">
+              <div className="font-display text-2xl md:text-3xl leading-none">{timeLeft.minutes}</div>
+              <div className="font-accent text-[10px] md:text-xs tracking-[0.25em] uppercase opacity-80">Minutes</div>
+            </div>
+            <div className="px-4 py-3 rounded-2xl bg-foreground/80 text-background border border-gold/20 shadow-elegant backdrop-blur-sm min-w-[72px] text-center">
+              <div className="font-display text-2xl md:text-3xl leading-none">{timeLeft.seconds}</div>
+              <div className="font-accent text-[10px] md:text-xs tracking-[0.25em] uppercase opacity-80">Seconds</div>
+            </div>
+          </div>
         </motion.div>
 
         {/* Bottom Ornament */}

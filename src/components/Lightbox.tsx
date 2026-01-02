@@ -6,6 +6,7 @@ interface Photo {
   id: number;
   src: string;
   alt: string;
+  caption?: string;
 }
 
 interface LightboxProps {
@@ -231,6 +232,20 @@ const Lightbox = ({ photos, currentIndex, isOpen, onClose, onPrevious, onNext }:
             />
           </AnimatePresence>
         </motion.div>
+
+        {/* Caption below image */}
+        {currentPhoto?.caption && (
+          <motion.div
+            className="absolute bottom-28 md:bottom-32 left-1/2 -translate-x-1/2 z-20"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="px-4 py-2 rounded-xl bg-background/90 text-foreground border border-gold/15 shadow-elegant backdrop-blur-sm max-w-[90vw] md:max-w-2xl text-center">
+              <p className="font-body text-sm md:text-base leading-snug">{currentPhoto.caption}</p>
+            </div>
+          </motion.div>
+        )}
 
         {/* Thumbnail strip */}
         <motion.div
