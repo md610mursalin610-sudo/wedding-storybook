@@ -2,98 +2,108 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Italiana&display=swap');
 
 @layer base {
   :root {
-    --background: 30 40% 98%;
-    --foreground: 20 10% 20%;
+    --background: 30 35% 97%;
+    --foreground: 25 20% 15%;
 
-    --card: 30 30% 97%;
-    --card-foreground: 20 10% 20%;
+    --card: 30 30% 96%;
+    --card-foreground: 25 20% 15%;
 
-    --popover: 30 40% 98%;
-    --popover-foreground: 20 10% 20%;
+    --popover: 30 35% 97%;
+    --popover-foreground: 25 20% 15%;
 
-    --primary: 350 40% 70%;
-    --primary-foreground: 30 40% 98%;
+    --primary: 345 35% 72%;
+    --primary-foreground: 30 35% 97%;
 
-    --secondary: 35 30% 92%;
-    --secondary-foreground: 20 10% 25%;
+    --secondary: 35 25% 90%;
+    --secondary-foreground: 25 20% 20%;
 
-    --muted: 30 20% 94%;
-    --muted-foreground: 20 10% 45%;
+    --muted: 30 15% 92%;
+    --muted-foreground: 25 12% 50%;
 
-    --accent: 42 70% 55%;
-    --accent-foreground: 20 10% 15%;
+    --accent: 38 65% 58%;
+    --accent-foreground: 25 20% 10%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 30 20% 88%;
-    --input: 30 20% 88%;
-    --ring: 350 40% 70%;
+    --border: 30 18% 88%;
+    --input: 30 18% 88%;
+    --ring: 345 35% 72%;
 
     --radius: 0.5rem;
 
-    /* Custom wedding colors */
-    --blush: 350 35% 85%;
-    --blush-dark: 350 30% 75%;
-    --cream: 40 30% 96%;
-    --gold: 42 70% 55%;
-    --gold-light: 42 60% 75%;
-    --rose: 350 40% 70%;
-    --champagne: 35 40% 90%;
+    /* Premium wedding palette */
+    --blush: 345 30% 88%;
+    --blush-medium: 345 32% 80%;
+    --blush-dark: 345 28% 70%;
+    --ivory: 40 35% 96%;
+    --cream: 38 40% 94%;
+    --champagne: 35 35% 88%;
+    --gold: 38 65% 58%;
+    --gold-light: 40 55% 72%;
+    --gold-dark: 36 60% 45%;
+    --rose: 345 35% 72%;
+    --rose-light: 345 40% 85%;
+    --burgundy: 345 40% 35%;
+    --sage: 140 15% 70%;
 
-    /* Fonts */
+    /* Typography */
     --font-display: 'Playfair Display', serif;
+    --font-accent: 'Italiana', serif;
     --font-body: 'Cormorant Garamond', serif;
 
     /* Shadows */
-    --shadow-soft: 0 4px 20px -4px hsl(350 30% 70% / 0.15);
-    --shadow-elegant: 0 8px 40px -8px hsl(350 30% 70% / 0.2);
-    --shadow-glow: 0 0 60px hsl(42 70% 55% / 0.15);
+    --shadow-soft: 0 4px 20px -4px hsl(345 30% 50% / 0.1);
+    --shadow-medium: 0 8px 30px -6px hsl(345 30% 50% / 0.15);
+    --shadow-elegant: 0 12px 50px -10px hsl(345 30% 50% / 0.2);
+    --shadow-glow: 0 0 80px hsl(38 65% 58% / 0.15);
+    --shadow-gold: 0 4px 30px -5px hsl(38 65% 58% / 0.3);
 
-    /* Transitions */
-    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-bounce: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    /* Gradients */
+    --gradient-romantic: linear-gradient(180deg, hsl(var(--ivory)) 0%, hsl(var(--blush) / 0.4) 50%, hsl(var(--ivory)) 100%);
+    --gradient-hero: linear-gradient(180deg, hsl(var(--foreground) / 0.3) 0%, hsl(var(--foreground) / 0.5) 40%, hsl(var(--background)) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(var(--gold-dark)) 0%, hsl(var(--gold)) 50%, hsl(var(--gold-light)) 100%);
   }
 
   .dark {
-    --background: 20 15% 8%;
-    --foreground: 30 20% 95%;
+    --background: 25 18% 8%;
+    --foreground: 35 25% 92%;
 
-    --card: 20 12% 12%;
-    --card-foreground: 30 20% 95%;
+    --card: 25 15% 12%;
+    --card-foreground: 35 25% 92%;
 
-    --popover: 20 12% 12%;
-    --popover-foreground: 30 20% 95%;
+    --popover: 25 15% 12%;
+    --popover-foreground: 35 25% 92%;
 
-    --primary: 350 35% 65%;
-    --primary-foreground: 20 15% 8%;
+    --primary: 345 30% 60%;
+    --primary-foreground: 25 18% 8%;
 
-    --secondary: 20 12% 18%;
-    --secondary-foreground: 30 20% 90%;
+    --secondary: 25 12% 18%;
+    --secondary-foreground: 35 20% 85%;
 
-    --muted: 20 12% 18%;
-    --muted-foreground: 30 15% 60%;
+    --muted: 25 12% 18%;
+    --muted-foreground: 30 12% 55%;
 
-    --accent: 42 60% 50%;
-    --accent-foreground: 20 15% 8%;
+    --accent: 38 55% 50%;
+    --accent-foreground: 25 18% 8%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --border: 25 12% 20%;
+    --input: 25 12% 20%;
+    --ring: 345 30% 60%;
 
-    --border: 20 12% 20%;
-    --input: 20 12% 20%;
-    --ring: 350 35% 65%;
-
-    --blush: 350 25% 25%;
-    --blush-dark: 350 20% 35%;
-    --cream: 30 15% 15%;
-    --gold: 42 50% 45%;
-    --gold-light: 42 40% 35%;
-    --champagne: 35 20% 18%;
+    --blush: 345 20% 20%;
+    --blush-medium: 345 22% 30%;
+    --blush-dark: 345 25% 40%;
+    --ivory: 30 12% 12%;
+    --cream: 30 10% 15%;
+    --champagne: 30 12% 18%;
+    --gold: 38 50% 48%;
+    --gold-light: 38 40% 38%;
+    --gold-dark: 36 45% 35%;
   }
 }
 
@@ -107,13 +117,19 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
     font-family: var(--font-body);
     font-weight: 400;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
+    font-weight: 500;
+  }
+
+  ::selection {
+    background: hsl(var(--rose-light));
+    color: hsl(var(--burgundy));
   }
 }
 
@@ -122,92 +138,204 @@
     font-family: var(--font-display);
   }
 
+  .font-accent {
+    font-family: var(--font-accent);
+  }
+
   .font-body {
     font-family: var(--font-body);
   }
 
   .text-gradient-gold {
-    background: linear-gradient(135deg, hsl(var(--gold)) 0%, hsl(var(--gold-light)) 50%, hsl(var(--gold)) 100%);
+    background: var(--gradient-gold);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .bg-gradient-romantic {
-    background: linear-gradient(180deg, hsl(var(--cream)) 0%, hsl(var(--blush) / 0.3) 50%, hsl(var(--cream)) 100%);
+    background: var(--gradient-romantic);
   }
 
   .bg-gradient-hero {
-    background: linear-gradient(180deg, hsl(var(--background) / 0.1) 0%, hsl(var(--background) / 0.7) 60%, hsl(var(--background)) 100%);
+    background: var(--gradient-hero);
   }
 
   .shadow-romantic {
     box-shadow: var(--shadow-elegant);
   }
 
+  .shadow-gold {
+    box-shadow: var(--shadow-gold);
+  }
+
   .glow-gold {
     box-shadow: var(--shadow-glow);
+  }
+
+  /* Decorative line */
+  .ornament-line {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .ornament-line::before,
+  .ornament-line::after {
+    content: '';
+    height: 1px;
+    flex: 1;
+    max-width: 100px;
+    background: linear-gradient(90deg, transparent, hsl(var(--gold) / 0.5), transparent);
+  }
+
+  /* Glass effect */
+  .glass {
+    background: hsl(var(--background) / 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  /* Image frame */
+  .photo-frame {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow-medium);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .photo-frame::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid hsl(var(--gold) / 0.1);
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 10;
+    transition: border-color 0.3s ease;
+  }
+
+  .photo-frame:hover::before {
+    border-color: hsl(var(--gold) / 0.4);
+  }
+
+  .photo-frame:hover {
+    box-shadow: var(--shadow-elegant);
+    transform: translateY(-4px);
   }
 }
 
 @layer utilities {
-  .animate-fade-in {
-    animation: fadeIn 1s ease-out forwards;
-  }
-
-  .animate-slide-up {
-    animation: slideUp 0.8s ease-out forwards;
-  }
-
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
-
-  .animate-shimmer {
-    animation: shimmer 3s ease-in-out infinite;
-  }
-
-  @keyframes fadeIn {
-    from {
+  /* Petal animation for floating elements */
+  @keyframes petal-fall {
+    0% {
+      transform: translateY(-10vh) rotate(0deg) translateX(0);
       opacity: 0;
     }
-    to {
+    10% {
       opacity: 1;
     }
-  }
-
-  @keyframes slideUp {
-    from {
+    90% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(110vh) rotate(720deg) translateX(100px);
       opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
     }
   }
 
-  @keyframes float {
+  @keyframes petal-sway {
     0%, 100% {
-      transform: translateY(0);
+      transform: translateX(0) rotate(0deg);
+    }
+    25% {
+      transform: translateX(30px) rotate(10deg);
+    }
+    75% {
+      transform: translateX(-30px) rotate(-10deg);
+    }
+  }
+
+  @keyframes float-gentle {
+    0%, 100% {
+      transform: translateY(0) rotate(0deg);
     }
     50% {
-      transform: translateY(-10px);
+      transform: translateY(-15px) rotate(3deg);
     }
   }
 
   @keyframes shimmer {
-    0%, 100% {
-      opacity: 0.7;
+    0% {
+      background-position: -200% center;
     }
-    50% {
-      opacity: 1;
+    100% {
+      background-position: 200% center;
     }
   }
 
-  .delay-100 { animation-delay: 0.1s; }
-  .delay-200 { animation-delay: 0.2s; }
-  .delay-300 { animation-delay: 0.3s; }
-  .delay-400 { animation-delay: 0.4s; }
-  .delay-500 { animation-delay: 0.5s; }
+  @keyframes pulse-glow {
+    0%, 100% {
+      opacity: 0.5;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+  }
+
+  @keyframes text-reveal {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  .animate-petal-fall {
+    animation: petal-fall linear infinite;
+  }
+
+  .animate-petal-sway {
+    animation: petal-sway 4s ease-in-out infinite;
+  }
+
+  .animate-float-gentle {
+    animation: float-gentle 6s ease-in-out infinite;
+  }
+
+  .animate-shimmer {
+    background: linear-gradient(90deg, transparent, hsl(var(--gold) / 0.3), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 3s ease-in-out infinite;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 3s ease-in-out infinite;
+  }
+
+  .animate-text-reveal {
+    animation: text-reveal 1.5s ease-out forwards;
+  }
+
+  /* Scroll indicator */
+  @keyframes scroll-bounce {
+    0%, 100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    50% {
+      transform: translateY(8px);
+      opacity: 0.5;
+    }
+  }
+
+  .animate-scroll-bounce {
+    animation: scroll-bounce 2s ease-in-out infinite;
+  }
 }
