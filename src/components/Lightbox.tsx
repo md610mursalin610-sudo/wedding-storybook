@@ -263,14 +263,14 @@ const Lightbox = ({ photos, currentIndex, isOpen, onClose, onPrevious, onNext }:
 
         {/* Thumbnail strip */}
         <motion.div
-          className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 z-20"
+          className="absolute bottom-3 sm:bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 z-20 w-full px-2 sm:px-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <div className="flex items-center gap-2 px-4 py-3 glass rounded-full max-w-[90vw] overflow-x-auto scrollbar-hide">
-            {photos.slice(Math.max(0, currentIndex - 3), Math.min(photos.length, currentIndex + 4)).map((photo, i) => {
-              const actualIndex = Math.max(0, currentIndex - 3) + i;
+          <div className="flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3 glass rounded-2xl sm:rounded-full max-w-full mx-auto overflow-x-auto scrollbar-hide">
+            {photos.slice(Math.max(0, currentIndex - 2), Math.min(photos.length, currentIndex + 3)).map((photo, i) => {
+              const actualIndex = Math.max(0, currentIndex - 2) + i;
               return (
                 <motion.button
                   key={photo.id}
@@ -285,14 +285,14 @@ const Lightbox = ({ photos, currentIndex, isOpen, onClose, onPrevious, onNext }:
                   }}
                   aria-label={`View image ${actualIndex + 1}`}
                   className={`
-                    w-12 h-12 md:w-14 md:h-14 rounded-lg overflow-hidden flex-shrink-0
+                    w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-md sm:rounded-lg overflow-hidden flex-shrink-0
                     transition-all duration-200
                     ${actualIndex === currentIndex
-                      ? 'ring-2 ring-gold scale-110'
-                      : 'opacity-50 hover:opacity-80'
+                      ? 'ring-2 ring-gold scale-105 sm:scale-110'
+                      : 'opacity-60 hover:opacity-90 active:opacity-100'
                     }
                   `}
-                  whileHover={{ scale: actualIndex === currentIndex ? 1.1 : 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
                   <img
                     src={resolveImageSrc(photo.src)}
