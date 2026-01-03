@@ -12,6 +12,7 @@ import { supabase } from "@/lib/supabaseClient";
 type DBCategory = { id: string; name: string };
 type DBPhoto = {
   id: string;
+  storage_path?: string | null;
   public_url: string;
   caption: string | null;
   category_id: string | null;
@@ -78,7 +79,7 @@ const Index = () => {
         // Load photos
         const { data: rows, error: photosErr } = await supabase
           .from("photos")
-          .select("id, public_url, caption, category_id, created_at")
+          .select("id, storage_path, public_url, caption, category_id, created_at")
           .order("created_at", { ascending: false })
           .limit(200);
         if (photosErr) {
@@ -87,12 +88,21 @@ const Index = () => {
         console.log("[Gallery] photos fetched:", rows?.length ?? 0);
 
         const rowsTyped = (rows ?? []) as DBPhoto[];
-        const mapped = rowsTyped.map((p, idx: number) => ({
-          id: idx + 1,
-          src: p.public_url,
-          alt: p.caption ? p.caption : "Wedding photo",
-          category: p.category_id ? (catMap.get(p.category_id) ?? "Details") : "Details",
-          caption: p.caption ?? "",
+        const mapped = await Promise.all(rowsTyped.map(async (p, idx: number) => {
+          let src = p.public_url;
+          if (p.storage_path) {
+            try {
+              const { data: signed } = await supabase.storage.from("gallery").createSignedUrl(p.storage_path, 60 * 60);
+              if (signed?.signedUrl) src = signed.signedUrl;
+            } catch { void 0; }
+          }
+          return {
+            id: idx + 1,
+            src,
+            alt: p.caption ? p.caption : "Wedding photo",
+            category: p.category_id ? (catMap.get(p.category_id) ?? "Details") : "Details",
+            caption: p.caption ?? "",
+          };
         }));
         setDbPhotos(mapped);
       } catch (err) {
