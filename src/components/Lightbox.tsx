@@ -263,12 +263,12 @@ const Lightbox = ({ photos, currentIndex, isOpen, onClose, onPrevious, onNext }:
 
         {/* Thumbnail strip */}
         <motion.div
-          className="absolute bottom-3 sm:bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 z-20 w-full px-2 sm:px-4"
+          className="absolute bottom-3 sm:bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 z-20 px-2 sm:px-4 flex justify-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <div className="flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3 glass rounded-2xl sm:rounded-full max-w-full mx-auto overflow-x-auto scrollbar-hide">
+          <div className="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3 glass rounded-full border border-gold/20 shadow-elegant mx-auto">
             {photos.slice(Math.max(0, currentIndex - 2), Math.min(photos.length, currentIndex + 3)).map((photo, i) => {
               const actualIndex = Math.max(0, currentIndex - 2) + i;
               return (
@@ -289,7 +289,7 @@ const Lightbox = ({ photos, currentIndex, isOpen, onClose, onPrevious, onNext }:
                     transition-all duration-200
                     ${actualIndex === currentIndex
                       ? 'ring-2 ring-gold scale-105 sm:scale-110'
-                      : 'opacity-60 hover:opacity-90 active:opacity-100'
+                      : 'opacity-70 hover:opacity-90 active:opacity-100'
                     }
                   `}
                   whileTap={{ scale: 0.95 }}
