@@ -1,5 +1,8 @@
 import { useState } from "react";
 import HeroSection from "@/components/HeroSection";
+import LoveStorySection from "@/components/LoveStorySection";
+import VenueSection from "@/components/VenueSection";
+import RSVPSection from "@/components/RSVPSection";
 import MasonryGallery from "@/components/MasonryGallery";
 import Lightbox from "@/components/Lightbox";
 import Footer from "@/components/Footer";
@@ -73,10 +76,16 @@ const Index = () => {
         backgroundImage={heroImage}
       />
 
+      <LoveStorySection />
+
+      <VenueSection />
+
       <MasonryGallery
         photos={weddingPhotos}
         onPhotoClick={handlePhotoClick}
       />
+
+      <RSVPSection />
 
       <Lightbox
         photos={weddingPhotos}
