@@ -8,14 +8,14 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
+import AccessDenied from "@/pages/AccessDenied";
+import { ALLOWED_ADMINS } from "@/config/allowedEmails";
 
 interface Category { id: string; name: string }
 interface Photo { id: string; public_url: string; storage_path: string; caption: string | null; category_id: string | null; created_at: string }
 
 const Admin = () => {
   const [session, setSession] = useState<Session | null>(null);
-  const [email, setEmail] = useState("");
-  const [sending, setSending] = useState(false);
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [newCategory, setNewCategory] = useState("");
@@ -69,18 +69,6 @@ const Admin = () => {
     if (error) toast.error("Failed to load photos");
     setPhotos(data ?? []);
     setLoadingPhotos(false);
-  };
-
-  const handleSendMagicLink = async () => {
-    if (!email) return;
-    setSending(true);
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: `${window.location.origin}/admin` },
-    });
-    setSending(false);
-    if (error) toast.error(error.message);
-    else toast.success("Check your email for the login link");
   };
 
   const handleSignOut = async () => {
@@ -203,24 +191,13 @@ const Admin = () => {
   const categoryMap = useMemo(() => new Map(categories.map(c => [c.id, c.name])), [categories]);
 
   if (!session) {
-    return (
-      <div className="container mx-auto max-w-lg px-4 py-10">
-        <Card>
-          <CardHeader>
-            <CardTitle>Admin Login</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
-            </div>
-            <Button onClick={handleSendMagicLink} disabled={!email || sending} className="w-full">
-              {sending ? "Sending..." : "Send Magic Link"}
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
+    return null;
+  }
+
+  const email = session.user.email?.toLowerCase() ?? "";
+  const isAdmin = ALLOWED_ADMINS.map((e) => e.toLowerCase().trim()).includes(email);
+  if (!isAdmin) {
+    return <AccessDenied email={email} />;
   }
 
   return (

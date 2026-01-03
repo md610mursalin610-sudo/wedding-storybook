@@ -1,4 +1,16 @@
-# Welcome to your Lovable project
+# Wedding Storybook — Private Gallery
+
+This is a private wedding gallery built with React (Vite + TypeScript + Tailwind + shadcn/ui) and Supabase (Auth, Postgres, Storage). The entire site is gated by Google Sign‑In and an email allowlist. Photos are stored in a private Storage bucket and rendered via signed URLs.
+
+For full, step‑by‑step setup (Supabase schema, private bucket policies, Google OAuth, environment variables, Netlify), read:
+
+- SETUP.md (this repo)
+
+Quick start (dev):
+- Create `.env.local` with `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
+- `npm i` then `npm run dev`.
+- Add allowed emails in `src/config/allowedEmails.ts`.
+- To run without any database/auth, see “Option A — Demo mode” in SETUP.md.
 
 ## Project info
 
