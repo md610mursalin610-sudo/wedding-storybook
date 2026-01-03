@@ -1,6 +1,7 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Heart, ChevronDown } from "lucide-react";
+import FlipClockCountdown from "./FlipClockCountdown";
 
 interface HeroSectionProps {
   coupleNames: string;
@@ -20,29 +21,6 @@ const HeroSection = ({ coupleNames, weddingDate, backgroundImage }: HeroSectionP
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   const names = coupleNames.split(" & ");
-
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-
-  useEffect(() => {
-    const wDate = new Date(weddingDate);
-    const tick = () => {
-      const now = new Date();
-      let next = new Date(now.getFullYear(), wDate.getMonth(), wDate.getDate());
-      if (next.getTime() < now.getTime()) {
-        next = new Date(now.getFullYear() + 1, wDate.getMonth(), wDate.getDate());
-      }
-      const diff = next.getTime() - now.getTime();
-      const totalSeconds = Math.max(0, Math.floor(diff / 1000));
-      const days = Math.floor(totalSeconds / (60 * 60 * 24));
-      const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
-      const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
-      const seconds = totalSeconds % 60;
-      setTimeLeft({ days, hours, minutes, seconds });
-    };
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, [weddingDate]);
 
   return (
     <section ref={ref} className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -148,31 +126,10 @@ const HeroSection = ({ coupleNames, weddingDate, backgroundImage }: HeroSectionP
           </div>
         </motion.div>
 
-        <motion.div
-          className="mt-6 flex justify-center"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.1 }}
-        >
-          <div className="flex items-stretch gap-2 md:gap-4">
-            <div className="px-4 py-3 rounded-2xl bg-background/85 text-foreground ring-1 ring-gold/25 shadow-gold backdrop-blur-sm min-w-[72px] text-center">
-              <div className="font-display text-2xl md:text-3xl leading-none text-gradient-gold">{timeLeft.days}</div>
-              <div className="font-accent text-[10px] md:text-xs tracking-[0.25em] uppercase text-muted-foreground">Days</div>
-            </div>
-            <div className="px-4 py-3 rounded-2xl bg-background/85 text-foreground ring-1 ring-gold/25 shadow-gold backdrop-blur-sm min-w-[72px] text-center">
-              <div className="font-display text-2xl md:text-3xl leading-none text-gradient-gold">{timeLeft.hours}</div>
-              <div className="font-accent text-[10px] md:text-xs tracking-[0.25em] uppercase text-muted-foreground">Hours</div>
-            </div>
-            <div className="px-4 py-3 rounded-2xl bg-background/85 text-foreground ring-1 ring-gold/25 shadow-gold backdrop-blur-sm min-w-[72px] text-center">
-              <div className="font-display text-2xl md:text-3xl leading-none text-gradient-gold">{timeLeft.minutes}</div>
-              <div className="font-accent text-[10px] md:text-xs tracking-[0.25em] uppercase text-muted-foreground">Minutes</div>
-            </div>
-            <div className="px-4 py-3 rounded-2xl bg-background/85 text-foreground ring-1 ring-gold/25 shadow-gold backdrop-blur-sm min-w-[72px] text-center">
-              <div className="font-display text-2xl md:text-3xl leading-none text-gradient-gold">{timeLeft.seconds}</div>
-              <div className="font-accent text-[10px] md:text-xs tracking-[0.25em] uppercase text-muted-foreground">Seconds</div>
-            </div>
-          </div>
-        </motion.div>
+        {/* Flip Clock Countdown */}
+        <div className="mt-8 md:mt-10">
+          <FlipClockCountdown targetDate={weddingDate} />
+        </div>
 
         {/* Bottom Ornament */}
         <motion.div
