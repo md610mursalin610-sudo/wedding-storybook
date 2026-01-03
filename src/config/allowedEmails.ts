@@ -3,4 +3,5 @@ export const ALLOWED_EMAILS: string[] = [
   "md610mursalin610@gmail.com",
   "abushaidislam7@gmail.com",
   "shebaahmed049@gmail.com",
+  "laboniakterlila58@gmail.com",
 ];
