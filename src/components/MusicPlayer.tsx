@@ -233,155 +233,206 @@ const MusicPlayer = () => {
 
       {/* Floating player */}
       <motion.div
-        className="fixed bottom-6 right-6 z-50"
+        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
       >
         <motion.div
           className={`
-            flex items-center gap-2 bg-background/95 backdrop-blur-md
-            rounded-full shadow-elegant border border-gold/20
+            flex items-center gap-1.5 md:gap-2 bg-background/95 backdrop-blur-md
+            rounded-full shadow-elegant border border-gold/30
             transition-all duration-300
-            ${isExpanded ? 'px-4 py-2' : (isSmall ? 'p-1.5' : 'p-0')}
+            ${isExpanded ? 'px-2 py-1.5 md:px-4 md:py-2' : 'p-0'}
           `}
           style={{ position: 'relative' }}
           onMouseEnter={!isTouch ? () => setIsTrayHovered(true) : undefined}
           onMouseLeave={!isTouch ? () => setIsTrayHovered(false) : undefined}
-          onClick={isTouch ? () => setIsExpanded(v => !v) : undefined}
         >
-          {/* Controls tray (slides open to the left on small screens) */}
-          <motion.div
-            className={`flex items-center gap-2 ${isSmall ? 'flex-row-reverse overflow-hidden absolute right-full top-1/2 -translate-y-1/2 mr-2 z-50' : ''}`}
-            initial={isSmall ? { width: 0, opacity: 0 } : undefined}
-            animate={isSmall ? { width: isExpanded ? trayWidth : 0, opacity: isExpanded ? 1 : 0 } : undefined}
-            transition={{ duration: 0.25 }}
-          >
-            <AnimatePresence>
-              {isExpanded && (
-                <motion.div
-                  className="flex items-center gap-2"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                >
-                  {/* Previous button */}
+          {/* Controls tray - positioned above on mobile for better UX */}
+          <AnimatePresence>
+            {isExpanded && (
+              <motion.div
+                className={`
+                  ${isSmall 
+                    ? 'absolute bottom-full right-0 mb-2 flex-col bg-background/95 backdrop-blur-md rounded-2xl shadow-elegant border border-gold/30 p-3' 
+                    : 'flex items-center gap-2'
+                  }
+                `}
+                initial={{ opacity: 0, y: isSmall ? 10 : 0, scale: isSmall ? 0.9 : 1 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: isSmall ? 10 : 0, scale: isSmall ? 0.9 : 1 }}
+                transition={{ duration: 0.2 }}
+              >
+                {/* Now playing title */}
+                <div className={`relative ${isSmall ? 'mb-3 w-full' : ''}`}>
+                  <span
+                    className={`
+                      font-body text-foreground/80 cursor-pointer select-none block
+                      ${isSmall ? 'text-sm text-center font-medium' : 'text-sm max-w-[180px] truncate'}
+                    `}
+                    onClick={() => setIsPlaylistOpen(v => !v)}
+                    title={musicPlaylist[currentTrackIndex].title}
+                  >
+                    {musicPlaylist[currentTrackIndex].title}
+                  </span>
+
+                  {/* Playlist dropdown */}
+                  <AnimatePresence>
+                    {isPlaylistOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 6 }}
+                        className={`
+                          absolute bottom-full mb-2 bg-background rounded-xl shadow-elegant 
+                          border border-gold/20 overflow-hidden z-[60]
+                          ${isSmall ? 'left-0 right-0' : 'right-0 min-w-[220px]'}
+                        `}
+                        onMouseLeave={!isTouch ? () => setIsPlaylistOpen(false) : undefined}
+                      >
+                        <div className="max-h-48 md:max-h-64 overflow-auto">
+                          {musicPlaylist.map((track, idx) => (
+                            <button
+                              key={idx}
+                              onClick={() => selectTrack(idx)}
+                              aria-selected={idx === currentTrackIndex}
+                              className={`
+                                w-full text-left px-3 py-2.5 md:px-4 md:py-3 text-xs md:text-sm font-body transition-colors
+                                ${idx === currentTrackIndex 
+                                  ? 'bg-gold/15 text-foreground border-l-2 border-gold' 
+                                  : 'text-muted-foreground hover:bg-muted'
+                                }
+                              `}
+                            >
+                              {track.title}
+                            </button>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                {/* Control buttons row */}
+                <div className={`flex items-center justify-center gap-1 ${isSmall ? 'w-full' : ''}`}>
+                  {/* Previous */}
                   <button
                     onClick={handlePrevious}
                     aria-label="Previous track"
-                    className={`${isSmall ? 'w-8 h-8' : 'w-9 h-9'} flex items-center justify-center rounded-full text-foreground/80 hover:text-foreground hover:bg-muted transition-colors`}
+                    className="w-9 h-9 md:w-10 md:h-10 flex items-center justify-center rounded-full text-foreground/70 hover:text-foreground hover:bg-gold/10 active:bg-gold/20 transition-colors"
                   >
                     <SkipBack className="w-4 h-4" />
                   </button>
 
-                  {/* Mute button */}
+                  {/* Mute */}
                   <button
                     onClick={toggleMute}
                     aria-label={isMuted ? 'Unmute audio' : 'Mute audio'}
-                    className={`${isSmall ? 'w-8 h-8' : 'w-9 h-9'} flex items-center justify-center rounded-full text-foreground/80 hover:text-foreground hover:bg-muted transition-colors`}
+                    className="w-9 h-9 md:w-10 md:h-10 flex items-center justify-center rounded-full text-foreground/70 hover:text-foreground hover:bg-gold/10 active:bg-gold/20 transition-colors"
                   >
                     {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
                   </button>
 
-                  {/* Now playing with anchored dropdown */}
-                  <div className="relative">
-                    <span
-                      className={`font-body ${isSmall ? 'text-xs' : 'text-sm'} text-muted-foreground whitespace-nowrap cursor-pointer select-none ${isSmall ? 'max-w-[120px]' : 'max-w-[240px]'} truncate`}
-                      onClick={() => setIsPlaylistOpen(v => !v)}
-                      onMouseEnter={!isTouch ? () => setIsPlaylistOpen(true) : undefined}
-                      title={musicPlaylist[currentTrackIndex].title}
-                    >
-                      {musicPlaylist[currentTrackIndex].title}
-                    </span>
-
-                    <AnimatePresence>
-                      {isPlaylistOpen && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 6 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: 6 }}
-                          className={`absolute bottom-full ${isSmall ? 'left-1/2 -translate-x-1/2' : 'right-0'} mb-2 bg-background rounded-xl shadow-elegant border border-gold/20 overflow-hidden z-[60]`}
-                          onMouseLeave={!isTouch ? () => setIsPlaylistOpen(false) : undefined}
-                        >
-                          <div className={`${isSmall ? 'min-w-[200px] max-w-[90vw]' : 'min-w-[240px]'} max-h-64 overflow-auto`}>
-                            {musicPlaylist.map((track, idx) => (
-                              <button
-                                key={idx}
-                                onClick={() => selectTrack(idx)}
-                                aria-selected={idx === currentTrackIndex}
-                                className={`w-full text-left px-4 py-3 text-sm font-body transition-colors ${idx === currentTrackIndex ? 'bg-gold/10 text-foreground border-l-2 border-gold' : 'text-muted-foreground hover:bg-muted'}`}
-                              >
-                                {track.title}
-                              </button>
-                            ))}
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-
-                  {/* Next button */}
+                  {/* Next */}
                   <button
                     onClick={handleNext}
                     aria-label="Next track"
-                    className={`${isSmall ? 'w-8 h-8' : 'w-9 h-9'} flex items-center justify-center rounded-full text-foreground/80 hover:text-foreground hover:bg-muted transition-colors`}
+                    className="w-9 h-9 md:w-10 md:h-10 flex items-center justify-center rounded-full text-foreground/70 hover:text-foreground hover:bg-gold/10 active:bg-gold/20 transition-colors"
                   >
                     <SkipForward className="w-4 h-4" />
                   </button>
+                </div>
 
-                  {/* Volume Slider */}
-                  <div className="flex-1 min-w-[40px]">
-                    <input
-                      type="range"
-                      min="0"
-                      max="1"
-                      step="0.01"
-                      value={volume}
-                      onChange={handleVolumeChange}
-                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
-                    />
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
+                {/* Volume Slider */}
+                <div className={`${isSmall ? 'w-full mt-2 px-1' : 'w-20'}`}>
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value={volume}
+                    onChange={handleVolumeChange}
+                    className="w-full h-1.5 bg-muted rounded-full appearance-none cursor-pointer accent-gold"
+                    style={{
+                      background: `linear-gradient(to right, hsl(var(--gold)) ${volume * 100}%, hsl(var(--muted)) ${volume * 100}%)`
+                    }}
+                  />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Main play/pause button */}
           <motion.button
-            onClick={togglePlay}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (isTouch && !isExpanded) {
+                setIsExpanded(true);
+              } else {
+                togglePlay();
+              }
+            }}
+            onDoubleClick={(e) => {
+              e.stopPropagation();
+              if (isTouch) {
+                setIsExpanded(v => !v);
+              }
+            }}
             className={`
-              ${isSmall ? 'w-11 h-11' : 'w-12 h-12'} flex items-center justify-center rounded-full
+              relative w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full
               transition-all duration-300
               ${isPlaying 
-                ? 'bg-gold text-accent-foreground shadow-gold' 
-                : 'bg-blush text-foreground hover:bg-blush-medium'
+                ? 'bg-gradient-to-br from-gold to-gold-dark text-accent-foreground shadow-gold' 
+                : 'bg-gradient-to-br from-blush to-blush-medium text-foreground'
               }
             `}
-            whileHover={!isTouch ? { scale: 1.1 } : undefined}
+            whileHover={!isTouch ? { scale: 1.08 } : undefined}
             whileTap={{ scale: 0.95 }}
           >
             {isPlaying ? (
-              <Pause className="w-5 h-5" />
+              <Pause className="w-5 h-5 md:w-6 md:h-6" />
             ) : (
-              <Play className="w-5 h-5 ml-0.5" />
+              <Play className="w-5 h-5 md:w-6 md:h-6 ml-0.5" />
             )}
             
             {/* Animated rings when playing */}
             {isPlaying && (
               <>
                 <motion.div
-                  className="absolute inset-0 rounded-full border-2 border-gold/40"
-                  animate={{ scale: [1, 1.4], opacity: [0.6, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
+                  className="absolute inset-0 rounded-full border-2 border-gold/50"
+                  animate={{ scale: [1, 1.5], opacity: [0.7, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeOut" }}
                 />
                 <motion.div
                   className="absolute inset-0 rounded-full border-2 border-gold/30"
-                  animate={{ scale: [1, 1.6], opacity: [0.4, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity, delay: 0.3 }}
+                  animate={{ scale: [1, 1.8], opacity: [0.5, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity, delay: 0.4, ease: "easeOut" }}
                 />
               </>
             )}
+
+            {/* Tap indicator for mobile when collapsed */}
+            {isTouch && !isExpanded && !isPlaying && (
+              <motion.div
+                className="absolute -top-1 -right-1 w-3 h-3 bg-gold rounded-full"
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              />
+            )}
           </motion.button>
+
+          {/* Close button for mobile expanded state */}
+          {isTouch && isExpanded && (
+            <motion.button
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              onClick={() => setIsExpanded(false)}
+              className="absolute -top-2 -left-2 w-6 h-6 bg-muted rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground shadow-sm"
+            >
+              <span className="text-xs">✕</span>
+            </motion.button>
+          )}
         </motion.div>
       </motion.div>
     </>
