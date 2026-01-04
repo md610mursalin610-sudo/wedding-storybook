@@ -1,13 +1,14 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, lazy, Suspense } from "react";
 import HeroSection from "@/components/HeroSection";
-import LoveStorySection from "@/components/LoveStorySection";
-import VenueSection from "@/components/VenueSection";
-import MasonryGallery from "@/components/MasonryGallery";
-import Lightbox from "@/components/Lightbox";
-import Footer from "@/components/Footer";
-import FloatingPetals from "@/components/FloatingPetals";
-import MusicPlayer from "@/components/MusicPlayer";
-import { supabase } from "@/lib/supabaseClient";
+
+// Lazy-load non-critical, below-the-fold components
+const LoveStorySection = lazy(() => import("@/components/LoveStorySection"));
+const VenueSection = lazy(() => import("@/components/VenueSection"));
+const MasonryGallery = lazy(() => import("@/components/MasonryGallery"));
+const Lightbox = lazy(() => import("@/components/Lightbox"));
+const Footer = lazy(() => import("@/components/Footer"));
+const FloatingPetals = lazy(() => import("@/components/FloatingPetals"));
+const MusicPlayer = lazy(() => import("@/components/MusicPlayer"));
 
 type DBCategory = { id: string; name: string };
 type DBPhoto = {
@@ -66,6 +67,9 @@ const Index = () => {
         const url = import.meta.env?.VITE_SUPABASE_URL as string | undefined;
         const anon = (import.meta.env?.VITE_SUPABASE_ANON_KEY as string | undefined)?.slice(0, 10);
         console.log("[Gallery] Loading from Supabase", { url: url?.slice(0, 40) + "...", anonPrefix: anon });
+
+        // Dynamically import Supabase client to keep it out of the initial bundle
+        const { supabase } = await import("@/lib/supabaseClient");
 
         // Load categories into a map for name lookup
         const { data: cats, error: catsErr } = await supabase.from("categories").select("id, name");
@@ -136,10 +140,14 @@ const Index = () => {
   return (
     <main className="min-h-screen relative">
       {/* Background music player */}
-      <MusicPlayer />
+      <Suspense fallback={null}>
+        <MusicPlayer />
+      </Suspense>
       
       {/* Floating petals animation */}
-      <FloatingPetals />
+      <Suspense fallback={null}>
+        <FloatingPetals />
+      </Suspense>
 
       <HeroSection
         coupleNames={coupleNames}
@@ -147,26 +155,38 @@ const Index = () => {
         backgroundImage={heroImage}
       />
 
-      <LoveStorySection />
+      <Suspense fallback={null}>
+        <LoveStorySection />
+      </Suspense>
 
-      <VenueSection />
+      <Suspense fallback={null}>
+        <VenueSection />
+      </Suspense>
 
-      <MasonryGallery
-        photos={photos}
-        onPhotoClick={handlePhotoClick}
-        categories={dbCategories}
-      />
+      <Suspense fallback={null}>
+        <MasonryGallery
+          photos={photos}
+          onPhotoClick={handlePhotoClick}
+          categories={dbCategories}
+        />
+      </Suspense>
 
-      <Lightbox
-        photos={photos}
-        currentIndex={currentPhotoIndex}
-        isOpen={lightboxOpen}
-        onClose={() => setLightboxOpen(false)}
-        onPrevious={handlePrevious}
-        onNext={handleNext}
-      />
+      {lightboxOpen && (
+        <Suspense fallback={null}>
+          <Lightbox
+            photos={photos}
+            currentIndex={currentPhotoIndex}
+            isOpen={lightboxOpen}
+            onClose={() => setLightboxOpen(false)}
+            onPrevious={handlePrevious}
+            onNext={handleNext}
+          />
+        </Suspense>
+      )}
 
-      <Footer coupleNames={coupleNames} />
+      <Suspense fallback={null}>
+        <Footer coupleNames={coupleNames} />
+      </Suspense>
     </main>
   );
 };

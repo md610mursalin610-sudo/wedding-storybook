@@ -1,7 +1,7 @@
-import { useRef } from "react";
+import { useRef, lazy, Suspense } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Heart, ChevronDown } from "lucide-react";
-import FlipClockCountdown from "./FlipClockCountdown";
+const FlipClockCountdown = lazy(() => import("./FlipClockCountdown"));
 
 interface HeroSectionProps {
   coupleNames: string;
@@ -139,7 +139,9 @@ const HeroSection = ({ coupleNames, weddingDate, backgroundImage }: HeroSectionP
 
         {/* Flip Clock Countdown */}
         <div className="mt-8 md:mt-10">
-          <FlipClockCountdown targetDate={weddingDate} />
+          <Suspense fallback={null}>
+            <FlipClockCountdown targetDate={weddingDate} />
+          </Suspense>
         </div>
 
         {/* Bottom Ornament */}
