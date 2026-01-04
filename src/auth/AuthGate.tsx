@@ -1,6 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
-import { supabase } from "@/lib/supabaseClient";
 import { ALLOWED_EMAILS } from "@/config/allowedEmails";
 import AccessDenied from "@/pages/AccessDenied";
 import { Button } from "@/components/ui/button";
@@ -12,17 +11,23 @@ const AuthGate = ({ children }: Props) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let unsubscribe: (() => void) | undefined;
     const init = async () => {
+      const { supabase } = await import("@/lib/supabaseClient");
       const { data } = await supabase.auth.getSession();
       setSession(data.session ?? null);
       setLoading(false);
+      const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setSession(s));
+      unsubscribe = () => sub.subscription.unsubscribe();
     };
     void init();
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setSession(s));
-    return () => sub.subscription.unsubscribe();
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
   }, []);
 
   const signInWithGoogle = async () => {
+    const { supabase } = await import("@/lib/supabaseClient");
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: { redirectTo: window.location.href },

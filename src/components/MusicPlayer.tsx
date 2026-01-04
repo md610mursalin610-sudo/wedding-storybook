@@ -1,7 +1,6 @@
-import { useState, useRef, useEffect, type ComponentType } from "react";
+import { useState, useRef, useEffect, type ComponentType, lazy, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Music, Pause, Play, Volume2, VolumeX, SkipForward, SkipBack } from "lucide-react";
-import ReactPlayer from "react-player";
 
 
 const musicPlaylist = [
@@ -56,7 +55,8 @@ const MusicPlayer = () => {
     height?: number | string;
     onEnded?: () => void;
   };
-  const RP = ReactPlayer as unknown as ComponentType<PlayerProps>;
+  const ReactPlayerLazy = lazy(() => import("react-player/lazy"));
+  const RP = ReactPlayerLazy as unknown as ComponentType<PlayerProps>;
 
   useEffect(() => {
     const checkEnv = () => {
@@ -160,16 +160,18 @@ const MusicPlayer = () => {
       <AnimatePresence>
         {isYouTube && (
           <div style={{ position: "fixed", width: 0, height: 0, overflow: "hidden" }}>
-            <RP
-              url={currentUrl}
-              playing={isPlaying}
-              muted={isMuted}
-              volume={volume}
-              controls={false}
-              width={0}
-              height={0}
-              onEnded={handleNext}
-            />
+            <Suspense fallback={null}>
+              <RP
+                url={currentUrl}
+                playing={isPlaying}
+                muted={isMuted}
+                volume={volume}
+                controls={false}
+                width={0}
+                height={0}
+                onEnded={handleNext}
+              />
+            </Suspense>
           </div>
         )}
       </AnimatePresence>
