@@ -48,7 +48,12 @@ const AuthGate = ({ children }: Props) => {
         <div className="w-full max-w-sm rounded-xl border p-6 text-center space-y-4 bg-background shadow-sm">
           <h1 className="text-xl font-display text-foreground">Family Album</h1>
           <p className="text-sm text-foreground">Sign in to continue</p>
-          <Button onClick={signInWithGoogle} className="w-full">Sign in with Google</Button>
+          <Button
+            onClick={signInWithGoogle}
+            className="w-full bg-foreground text-background hover:bg-foreground/90"
+          >
+            Sign in with Google
+          </Button>
         </div>
       </div>
     );
