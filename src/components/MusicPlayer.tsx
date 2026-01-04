@@ -55,7 +55,7 @@ const MusicPlayer = () => {
     height?: number | string;
     onEnded?: () => void;
   };
-  const ReactPlayerLazy = lazy(() => import("react-player/lazy"));
+  const ReactPlayerLazy = lazy(() => import("react-player"));
   const RP = ReactPlayerLazy as unknown as ComponentType<PlayerProps>;
 
   useEffect(() => {
